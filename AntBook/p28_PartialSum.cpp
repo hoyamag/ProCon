@@ -14,8 +14,9 @@
 using namespace std;
 
 bool PartialSum(vector<int>a, int value) {
-	// aの要素をいくつか選び、その和をちょうどvalueにできるかどうかを出力する
+	// aの要素をいくつか選び、その和をちょうどvalueにできるかどうかを出力する.全探索
 	if (a.size() == 0) {
+    // 葉についた時点で
 		if (value==0) return true;
 		else return false;
 	}
