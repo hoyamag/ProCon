@@ -14,6 +14,11 @@
 #include<utility>
 #include<tuple>
 using namespace std;
+#define ull unsigned long long
+#define llong long long
+#define rep(i, n) for(int i=0;i<(int)(n);i++)
+#define all(t) t.begin(), t.end()
+
 
 int main() {
 	
