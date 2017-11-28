@@ -7,12 +7,14 @@
 #include<sstream>
 #include<list>
 #include<queue>
-#include <algorithm>
+#include<algorithm>
+#include<functional>
 #include<initializer_list>
 #include<map>
 #include<set>
 #include<utility>
 #include<tuple>
+#include<regex>
 using namespace std;
 #define ull unsigned long long
 #define llong long long
