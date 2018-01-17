@@ -7,59 +7,38 @@
 #include<sstream>
 #include<list>
 #include<queue>
-#include <algorithm>
+#include<algorithm>
+#include<functional>
+#include<map>
+#include<set>
+#include<utility>
 #include<initializer_list>
+#include<tuple>
+#include<regex>
 using namespace std;
-#define ul unsigned long long
-
-#define rup(i, a, b) for(int (i) = (a); (i) < (b); (i)++)
-#define rdn(i, a, b) for(int (i) = (a); (i) > (b); (i)--)
-
-void swap(vector<long> &v, long in1, long in2) {
-	long t = v[in1];
-	v[in1] = v[in2];
-	v[in2] = t;
-}
-
+#define ull unsigned long long
+#define ll long long
+#define rep(i, n) for(int i=0;i<(int)(n);i++)
+#define all(t) t.begin(), t.end()
+#define mat(type, row, col, init) vector<vector<type>>(row, vector<type>(col, init));
 int main() {
-	long n;
+	int n;
 	cin >> n;
-	vector<long>p = vector<long>(n, 0);
-	rup(i, 0, n) cin >> p[i];
-	vector<long>seq = vector<long>(n, 0);
-	vector<int>same = vector<int>(n, 0);
-	rup(i, 0, n)seq[i] = i + 1;
-	rup(i, 0, n)same[i] = (p[i] == seq[i]);
-	list<long> index;
-	rup(i, 0, n) {
-		if (same[i]) {
-			index.push_back(i);
-		}
-	}
-	int count = 0;
-	while (!index.empty()) {
-		if (index.size() >= 2) {
-			long i1 = index.front();
-			index.pop_front();
-			long i2 = index.front();
-			index.pop_front();
-			swap(p, i1, i2);
-			count++;
+	vector<int>p(n, 0);
+	rep(i, n)cin >> p[i];
+	int ans = 0;
+	int con = 0;
+	rep(i, n) {
+		if (p[i] == i + 1) {
+			con++;
 		}
 		else {
-			long i1 = index.front();
-			index.pop_front();
-			for (int i = 0; i < n; i++) {
-				if (p[i1] != p[i]) {
-					swap(p, i1, i);
-					count++;
-					break;
-				}
-			}
+			ans += (int)ceil((double)con / 2);
+			con = 0;
 		}
 	}
-	
-	cout << count;
+	ans += (int)ceil((double)con / 2);
+	cout << ans;
 	return 0;
 }
 
