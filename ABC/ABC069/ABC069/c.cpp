@@ -31,7 +31,8 @@ int main() {
 	rep(i, n) {
 		b[a[i] % 4]++;
 	}
-	if (b[2] != 1) b[2] = 0;
+	if (b[2] %2==0) b[2] = 0;
+	else b[2]=1;
 	if (b[0] >= b[1] + b[2] + b[3] - 1) cout << "Yes";
 	else cout << "No";
 
