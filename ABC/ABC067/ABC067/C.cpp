@@ -7,69 +7,65 @@
 #include<sstream>
 #include<list>
 #include<queue>
-#include <algorithm>
+#include<algorithm>
+#include<functional>
+#include<map>
+#include<set>
+#include<utility>
 #include<initializer_list>
+#include<tuple>
+#include<regex>
 using namespace std;
-#define ul unsigned long long
-#define lol long long
-#define rup(i, a, b) for(int (i) = (a); (i) < (b); (i)++)
-#define rdn(i, a, b) for(int (i) = (a); (i) > (b); (i)--)
-
-vector<lol> a;
-
-
-lol sum(lol begin, lol end) {
-	lol sum = 0;
-	for (lol i = begin; i < end; i++) {
-		sum += a[i];
-	}
-	return sum;
-}
+#define ull unsigned long long
+#define ll long long
+#define rep(i, n) for(int i=0;i<(int)(n);i++)
+#define all(t) t.begin(), t.end()
+#define mat(type, row, col, init) vector<vector<type>>(row, vector<type>(col, init));
+#include<math.h>
+#include<limits.h>
+#include<iostream>
+#include<string>
+#include<vector>
+#include<stdio.h>
+#include<sstream>
+#include<list>
+#include<queue>
+#include<algorithm>
+#include<functional>
+#include<map>
+#include<set>
+#include<utility>
+#include<initializer_list>
+#include<tuple>
+#include<regex>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+#define rep(i, n) for(int i=0;i<(int)(n);i++)
+#define all(t) t.begin(), t.end()
+#define mat(type, row, col, init) vector<vector<type>>(row, vector<type>(col, init));
 
 int main() {
+  // AC
 	int n;
 	cin >> n;
-	a = vector<lol>(n, 0);
-	rup(i, 0, n) cin >> a[i];
-	lol s = (lol)ceil(n / 2);
-	lol x = sum(0, s);
-	lol y = sum(s, n);
-	lol eva = abs(x - y);
-	
-	while (1) {
-		if (s == 1 || s == n - 1) {
-			break;
-		}
-
-		lol nx = x;
-		lol ny = y;
-		lol ns = s;
-		if (x > y) {
-			nx -= a[ns - 1];
-			ny += a[ns - 1];
-			ns--;
-		}
-		else {
-			nx += a[ns];
-			ny -= a[ns];
-			ns++;
-		}
-		lol newEva = abs(nx - ny);
-		if (newEva < eva) {
-			x = nx;
-			y = ny;
-			s = ns;
-			eva = newEva;
-		}
-		else {
-			break;
-		}
-		
+	vector<int>a(n);
+	vector<ll>cs(n, 0);
+	rep(i, n) {
+		cin >> a[i];
 	}
+	cs[0] = a[0];
+	rep(i, n - 1) {
+		cs[i + 1] = cs[i] + a[i + 1];
+	}
+	ll ans = LLONG_MAX;
+	rep(i, n-1) {
+		ans = min(ans, abs(cs[i] - (cs[n - 1] - cs[i])));
+	}
+	
+	cout << ans;
 
-	cout << eva;
 	return 0;
 }
-
 
 
