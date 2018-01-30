@@ -26,16 +26,28 @@ int main() {
 
 	ull k;
 	cin >> k;
-	int n = 2;
+	int n = 50;
 	vector<ull>a(n);
-	ull i = k / 2;
-	if (k % 2 == 0) {
-		a[0] = i + 1;
-		a[1] = i;
-	}
-	else {
-		a[0] = i;
-		a[1] = i + 2;
+	rep(i, n)a[i] = i;
+	
+	ull bias = k / n;
+	rep(i, n)a[i] += bias;
+	rep(i, k%n) {
+		ull mi = n+bias, mii;
+		rep(i, n) {
+			if (a[i] < mi) {
+				mi = a[i];
+				mii = i;
+			}
+		}
+		rep(i, n) {
+			if (i != mii) {
+				a[i]--;
+			}
+			else {
+				a[i] += n;
+			}
+		}
 	}
 	cout << n << endl;
 	rep(i, n)cout << a[i] << " ";
