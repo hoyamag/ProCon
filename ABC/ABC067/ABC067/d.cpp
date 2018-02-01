@@ -1,4 +1,3 @@
-
 #include<math.h>
 #include<limits.h>
 #include<iostream>
@@ -70,20 +69,22 @@ int main() {
 	sl.push(0);
 	sr.push(n - 1);
 	while (!sl.empty() || !sr.empty()) {
-		// この1回分のPOPは、距離(pop回数)の点をすべて探索することとは一致しないため、
-		// この実装ではACしない。
-		if (!sl.empty()) {
-			int l = sl.front();
-			sl.pop();
-			for (auto v : g[l]) {
-				if (splat[v] == false) {
-					splat[v] = true;
-					sl.push(v);
-					nl++;
+		int sizel = sl.size();
+		rep(i, sizel) {//点0からの距離が同じ点集合を全部popする
+			if (!sl.empty()) {
+				int l = sl.front();
+				sl.pop();
+				for (auto v : g[l]) {
+					if (splat[v] == false) {
+						splat[v] = true;
+						sl.push(v);
+						nl++;
+					}
 				}
 			}
 		}
-		if (!sr.empty()) {
+		int sizer = sr.size();
+		rep(i,sizer){
 			int r = sr.front();
 			sr.pop();
 			for (auto v : g[r]) {
@@ -95,7 +96,7 @@ int main() {
 			}
 		}
 	}
-	
+
 
 	if (nl > nr) cout << "Fennec" << endl;
 	else cout << "Snuke" << endl;
