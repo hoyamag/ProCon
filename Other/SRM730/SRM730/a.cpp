@@ -1,0 +1,44 @@
+//#include<math.h>
+//#include<limits.h>
+//#include<iostream>
+//#include<string>
+//#include<vector>
+//#include<stdio.h>
+//#include<sstream>
+//#include<list>
+//#include<queue>
+//#include<algorithm>
+//#include<functional>
+//#include<map>
+//#include<set>
+//#include<utility>
+//#include<initializer_list>
+//#include<tuple>
+//#include<regex>
+//using namespace std;
+//#define ull unsigned long long
+//#define ll long long
+//#define rep(i, n) for(int i=0;i<(int)(n);i++)
+//#define rep1n(i, n) for(int i=1;i<=(int)(n);i++)
+//#define all(t) t.begin(), t.end()
+//#define rall(t) t.rbegin(), t.rend()
+//#define mat(type, row, col, init) vector<vector<type>>(row, vector<type>(col, init));
+//#define Yes(cond) cout<<(cond? "Yes":"No")<<endl;
+//#define YES(cond) cout<<(cond? "YES":"NO")<<endl;
+//
+//
+//
+//class IntervalIntersections {
+//public:
+//	int minLength(int x1, int y1, int x2, int y2) {
+//		int c = max(x1, x2);
+//		int d = min(y1, y2);
+//		return (c > d ? c-d : 0);
+//	}
+//};
+//
+//int main() {
+//	IntervalIntersections a;
+//	cout << a.minLength(3, 6, 1, 2) << endl;
+//	return 0;
+//}
