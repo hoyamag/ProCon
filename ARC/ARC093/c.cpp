@@ -1,0 +1,55 @@
+
+
+
+//#include<bitset>
+//#include<math.h>
+//#include<limits.h>
+//#include<iostream>
+//#include<string>
+//#include<vector>
+//#include<stdio.h>
+//#include<sstream>
+//#include<list>
+//#include<queue>
+//#include<algorithm>
+//#include<functional>
+//#include<map>
+//#include<set>
+//#include<utility>
+//#include<initializer_list>
+//#include<tuple>
+//#include<regex>
+//using namespace std;
+//#define ull unsigned long long
+//#define ll long long
+//#define rep(i, n) for(int i=0;i<(int)(n);i++)
+//#define rep1n(i, n) for(int i=1;i<=(int)(n);i++)
+//#define all(t) t.begin(), t.end()
+//#define rall(t) t.rbegin(), t.rend()
+//#define mat(type, row, col, init) vector<vector<type>>(row, vector<type>(col, init));
+//#define Yes(cond) cout<<(cond? "Yes":"No")<<endl;
+//#define YES(cond) cout<<(cond? "YES":"NO")<<endl;
+//#define repe(i, a, n) for(int i=(a);i<(int)(n);i++)
+//#define repi(i, a, n) for(int i=(a);i<=(int)(n);i++)
+//int main() {
+//	int n;
+//	cin >> n;
+//	vector<int>a(n + 2);
+//	rep(i, n)cin >> a[i + 1];
+//	a[0] = 0;
+//	a[n + 1] = 0;
+//	int m = a.size();
+//	ll sum = 0;
+//	rep(i, m - 1)sum += abs(a[i + 1] - a[i]);
+//
+//	repe(i, 1, m - 1) {
+//		int sumi = sum - abs(a[i] - a[i - 1]) - abs(a[i + 1] - a[i]) + abs(a[i + 1] - a[i - 1]);
+//		ll ans = sumi;
+//		cout << ans << endl;
+//	}
+//
+//	return 0;
+//}
+//
+//
+//
