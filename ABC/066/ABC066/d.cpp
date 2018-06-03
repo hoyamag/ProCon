@@ -28,47 +28,32 @@ using namespace std;
 #define Yes(cond) cout << (cond ? "Yes" : "No") << endl;
 #define YES(cond) cout << (cond ? "YES" : "NO") << endl;
 #define DBG(str) cerr << (str) << endl;
-bool isPrime(int n) {
-  // returns whether n is prime number or not
-  // n should be in range [0, lim].
-  // to see detail, search "Sieve of Eratosthenes"
-  static int lim = 1e5;
-  static bool done = false;
-  static vector<bool> isp(lim + 1, 1);
-  if (!done) {
-    isp[0] = isp[1] = false;
-    for (int i = 2; i <= lim; i++) {
-      if (isp[i]) {
-        for (int j = i + i; j <= lim; j += i) {
-          isp[j] = false;
-        }
-      }
-    }
-    done = true;
+ll M = 1e9 + 7;
+ll frac(int n) {
+  static vector<ll> f(1e5 + 1, -1);
+  if (f[0] == -1) {
+    f[0] = 1;
+    rep(i, 0, 1e5 + 1) { f[i + 1] = (i + 1) * f[i] % M; }
   }
-  return isp[n];
+  return f[n];
 }
 
+ll comb(int n, int r) {
+  //#TODO
+}
+ll inverse_frac(n) {
+  //#TODO
+}
 int main() {
+  // http://arc058.contest.atcoder.jp/data/arc/058/editorial.pdf
   int n;
   cin >> n;
-  ll sum = 0;
-
-  vector<int> p(n, 0);
-  int i = 0;
-  int index = 0;
-  while (1) {
-    if (isPrime(i) && i % 5 == 1) {
-      p[index] = i;
-      sum += i;
-      index++;
-    }
-    i++;
-    if (index == n)
-      break;
+  vector<int> a(n);
+  rep(i, 0, n + 1) cin >> a[i];
+  int m = n + 1;
+  rep(k, 1, n + 2) {
+        cout<<comb(m,k)-(2*comb(m-(i-j+1),k-1)<<endl;
   }
-
-  rep(i, 0, n) cout << p[i] << " ";
 
   return 0;
 }
