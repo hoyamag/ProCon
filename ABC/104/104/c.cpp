@@ -28,7 +28,9 @@ using namespace std;
 #define YES(cond) cout<<(cond? "YES":"NO")<<endl;
 #define DBG(str) cerr<<(str)<<endl;
 int main() {
-
+	int d, g;
+	cin >> d >> g;
+	vector<int>ans()
 	return 0;
 }
 
