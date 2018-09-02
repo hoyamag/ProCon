@@ -27,40 +27,11 @@ using namespace std;
 #define Yes(cond) cout<<(cond? "Yes":"No")<<endl;
 #define YES(cond) cout<<(cond? "YES":"NO")<<endl;
 #define DBG(str) cerr<<(str)<<endl;
-int value(int n, int k) {
-	int ans = 0;
-	repc(a, 1, n) {
-		if ((n + a) % k != 0) continue;
-		repc(b, a, n) {
-			if ((b + n) % k != 0) continue;
-			if ((a + b) % k == 0) {
-				if (a == b&&b == n&&n == a) {
-					ans++;
-					//cerr << a << " " << b << " " << n << endl;
-				}
-				else {
-					ans += 3;
-					//cerr <<"3: "<< a << " " << b << " " << n << endl;
-				}
-			}
-			b += k - 1;
-		}
-		a += k - 1;
-
-	}
-
-
-	return ans;
-}
 int main() {
-	int n, k;
-	cin >> n >> k;
-	vector<int> ans(n + 1, 0);
-	repc(i, 1, n) {
-		ans[i] = ans[i - 1] + value(i, k);
-	}
-	cout << ans[n] << endl;
-
+	int k;
+	cin >> k;
+    int ans = (k/2) * ((k+1)/2);
+	cout << ans << endl;
 	return 0;
 }
 
