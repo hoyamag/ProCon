@@ -28,7 +28,21 @@ using LL = long long;
 using ULL = unsigned long long;
 template <class T> using VEC = std::vector<T>;
 template <class T> using MAT = std::vector<std::vector<T>>;
+void DUMP() { cerr << endl; }
+template <class Head, class... Tail> void DUMP(Head &&head, Tail &&... tail) {
+  cerr << head << ", ";
+  dump_func(std::move(tail)...);
+}
+template <typename T> ostream &operator<<(ostream &os, vector<T> &vec) {
+  os << "{";
+  for (auto v : vec)
+    os << v << ",";
+  os << "}";
+  return os;
+}
+
 int main() {
-    
-    return 0;
+  int n;
+
+  return 0;
 }
