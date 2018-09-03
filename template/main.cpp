@@ -22,7 +22,6 @@
 #define RALL(t) t.rbegin(), t.rend()
 #define Yes(cond) cout << (cond ? "Yes" : "No") << endl;
 #define YES(cond) cout << (cond ? "YES" : "NO") << endl;
-#define DBG(str) cerr << (str) << endl;
 using namespace std;
 using LL = long long;
 using ULL = unsigned long long;
@@ -31,7 +30,7 @@ template <class T> using MAT = std::vector<std::vector<T>>;
 void DUMP() { cerr << endl; }
 template <class Head, class... Tail> void DUMP(Head &&head, Tail &&... tail) {
   cerr << head << ", ";
-  dump_func(std::move(tail)...);
+  DUMP(std::move(tail)...);
 }
 template <typename T> ostream &operator<<(ostream &os, vector<T> &vec) {
   os << "{";
