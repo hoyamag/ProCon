@@ -39,6 +39,11 @@ template <typename T> ostream &operator<<(ostream &os, vector<T> &vec) {
   os << "}";
   return os;
 }
+template <typename T1, typename T2>
+ostream &operator<<(ostream &os, pair<T1, T2> p) {
+  os << "[" << p.first << " " << p.second << "]";
+  return os;
+}
 
 int main() {
   int n;
