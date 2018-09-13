@@ -20,6 +20,8 @@
 #define REPC(i, a, n) for (int i = (a); i <= (int)(n); ++i)
 #define ALL(t) t.begin(), t.end()
 #define RALL(t) t.rbegin(), t.rend()
+#define MATINIT(type, row, col, init)                                          \
+  vector<vector<type>>(row, vector<type>(col, init));
 #define Yes(cond) cout << (cond ? "Yes" : "No") << endl;
 #define YES(cond) cout << (cond ? "YES" : "NO") << endl;
 using namespace std;
