@@ -1,21 +1,4 @@
-#include <algorithm>
-#include <bitset>
-#include <cstdio>
-#include <functional>
-#include <initializer_list>
-#include <iostream>
-#include <limits.h>
-#include <list>
-#include <map>
-#include <math.h>
-#include <queue>
-#include <regex>
-#include <set>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <utility>
-#include <vector>
+#include <bits/stdc++.h>
 #define REP(i, a, n) for (int i = (a); i < (int)(n); ++i)
 #define REPC(i, a, n) for (int i = (a); i <= (int)(n); ++i)
 #define ALL(t) t.begin(), t.end()
