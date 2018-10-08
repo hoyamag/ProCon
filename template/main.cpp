@@ -25,6 +25,22 @@ template <typename T> ostream &operator<<(ostream &os, vector<T> &vec) {
   return os;
 }
 template <typename T1, typename T2>
+ostream &operator<<(ostream &os, map<T1, T2> &m) {
+  os << "{";
+  for (auto v : m)
+    os << v << ",";
+  os << "}";
+  return os;
+}
+template <typename T1, typename T2>
+ostream &operator<<(ostream &os, map<T1, T2> &m) {
+  os << "{";
+  for (auto p : m)
+    os << p << ",";
+  os << "}";
+  return os;
+}
+template <typename T1, typename T2>
 ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
