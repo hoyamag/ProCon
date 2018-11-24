@@ -40,6 +40,26 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 
 int main() {
   int n;
+  int t,a;
+  cin>>n>>t>>a;
+  VEC<int>h(n);
+  REP(i,0,n)cin>>h[i];
+  VEC<double>diff(n);
+  REP(i,0,n){
+    diff[i]=abs(a-(t-0.006*h[i]));
+  }
+  int mii= 0;
+  double mi = 500000;
+  //DUMP(diff);
+  REP(i,0,n){
+    if(diff[i]<mi){
+      mi=diff[i];
+      mii=i;
+    }
+  }
+  cout<<mii+1<<endl;
+
+  
 
   return 0;
 }

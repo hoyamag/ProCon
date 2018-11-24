@@ -37,9 +37,44 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+LL M = 1e9+7;
+LL kai(LL n){
+  static VEC<LL> d(1e5+1,0);
+  if(d[n]==0){
+    d[0]=1;
+    REP(i,1,1e5+1){
+      d[i]=(i*d[i-1])%M;
+    }
+  }
+  return d[n];
+  
+}
+void show(MAT<LL> a){
+  REP(i,0,a.size()){
+    REP(j,0,a[i].size()){
+      cerr<<a[i][j]<<" ";
+    }
+    cerr<<endl;
+  }
+}
 
 int main() {
   int n;
+  cin>>n;
+  MAT<LL> m = MATINIT(LL, n+1, n+1,0);
+  m[1][1]=1;
+  REPC(i,1,n){
+    REPC(j,1,n){
+      LL sum =kai(i-1);
+      REP(k,0,i){
+        sum+=kai(n-1)*m[i][j];
+      }
+      m[i][j]=sum;
+    }
+  }
+  show(m);
+
+  
 
   return 0;
 }

@@ -39,7 +39,12 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  int n;
+  string s;
+  cin>>s;
+  if(s.length()==3) {
+    reverse(ALL(s));
+  }
+  cout<<s<<endl;
 
   return 0;
 }

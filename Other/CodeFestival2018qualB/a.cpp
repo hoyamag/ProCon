@@ -40,6 +40,9 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 
 int main() {
   int n;
+  cin>>n;
+  int p = 100/n;
+  cout<<100-p<<endl;
 
   return 0;
 }

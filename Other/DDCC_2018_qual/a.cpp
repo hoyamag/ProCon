@@ -40,6 +40,10 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 
 int main() {
   int n;
+  cin>>n;
+  LL ans = 1;
+  REP(i,0,n)ans*=4;
+  cout<<ans<<endl;
 
   return 0;
 }

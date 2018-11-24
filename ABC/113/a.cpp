@@ -39,7 +39,9 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  int n;
+  int x,y;
+  cin>>x>>y;
+  cout<<x+y/2<<endl;
 
   return 0;
 }
