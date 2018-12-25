@@ -39,51 +39,25 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-#include <cmath>
-#include <map>
-std::map<long long, long long> primeFactorization(long long n) {
-  // 素因数分解
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
 
 int main() {
   int n;
   cin >> n;
-  int lim = 100;
-  VEC<int> e(n + 1, 0);
-  REP(i, 2, n + 1) {
-    int cur = i;
-    REP(j, 2, i + 1) {
-      while (cur % j == 0) {
-        // DUMP(cur, j, e);
-        ++e[j];
-        cur /= j;
-      }
+  VEC<bool> even(n);
+  REP(i, 0, n) {
+    LL a;
+    cin >> a;
+    even[i] = (a % 2 == 0);
+  }
+  bool all = 1;
+  REP(i, 0, n) {
+    if (!even[i]) {
+      all = 0;
+      break;
     }
   }
-  // DUMP(e);
-  map<int, int> count;
-  VEC<int> num = {2, 4, 14, 24, 74};
-  REP(i, 0, n + 1) {
-    REP(j, 0, num.size()) {
-      if (e[i] >= num[j]) ++count[num[j]];
-    }
-  }
-  // DUMP(count);
-  LL ans = count[74] + count[4] * (count[4] - 1) * (count[2] - 2)/2 +
-           count[14] * (count[4] - 1) + count[24] * (count[2] - 1);
-
-  cout << ans << endl;
+  if(all)cout<<"second"<<endl;
+  else cout<<"first"<<endl;
 
   return 0;
 }
