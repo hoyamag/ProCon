@@ -1,3 +1,5 @@
+# local history directory
+.history/
 # executional
 *.exe
 *.out
