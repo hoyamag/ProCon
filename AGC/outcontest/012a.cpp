@@ -43,24 +43,20 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 int main() {
   int n;
   cin >> n;
-  VEC<LL> a(n);
-  REP(i, 0, n) cin >> a[i];
-  a.erase(unique(ALL(a)), a.end());
-  DUMP(a);
-  n=a.size();
-  int cnt = 0;
-  REP(i, 1, n - 1) {
-    LL pre = a[i - 1];
-    LL now = a[i];
-    LL next = a[i + 1];
-    if ((pre < now && now > next) || (pre > now && now < next)) {
-      ++cnt;
-      // cerr<<i<<endl;
-      ++i;
-    }
+  VEC<LL> a(3 * n);
+  REP(i, 0, 3 * n) { cin >> a[i]; }
+  sort(ALL(a));
+  LL sum = 0;
+  int ma = 3 * n - 1;
+  int mi = 0;
+  int mid = ma - 1;
+  REP(i, 0, n) {
+    sum +=a[mid];
+    ma -= 2;
+    --mi;
+    mid -= 2;
   }
-  ++cnt;
-  cout << cnt << endl;
+  cout<<sum<<endl;
 
   return 0;
 }

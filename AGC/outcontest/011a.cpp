@@ -41,26 +41,31 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  int n;
-  cin >> n;
-  VEC<LL> a(n);
-  REP(i, 0, n) cin >> a[i];
-  a.erase(unique(ALL(a)), a.end());
-  DUMP(a);
-  n=a.size();
-  int cnt = 0;
-  REP(i, 1, n - 1) {
-    LL pre = a[i - 1];
-    LL now = a[i];
-    LL next = a[i + 1];
-    if ((pre < now && now > next) || (pre > now && now < next)) {
-      ++cnt;
-      // cerr<<i<<endl;
+  LL N, C, K;
+  cin >> N >> C >> K;
+  VEC<LL> T(N);
+  REP(i, 0, N) cin >> T[i];
+  sort(ALL(T));
+  LL lim = T[0] + K;
+  int num = 0;
+  int pcnt = 0;
+  int bcnt = 0;
+
+  int i = 0;
+  while (pcnt <= N && i<N) {
+    // DUMP(i,pcnt,bcnt,lim);
+    if (T[i] <= lim && num < C) {
+      ++num;
       ++i;
+    } else {
+      pcnt += num;
+      num = max(num - C, 0LL);
+      ++bcnt;
+      lim = T[i]+K;
     }
   }
-  ++cnt;
-  cout << cnt << endl;
+  if(pcnt!=N)++bcnt;
+  cout << bcnt << endl;
 
   return 0;
 }
