@@ -39,48 +39,29 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-
 const LL M = 1e9 + 7;
+LL add(LL a, LL b) { return (a + b) % M; }
 LL mul(LL a, LL b) { return a * b % M; }
-int main() {
-  LL n, m;
-  cin >> n >> m;
-  VEC<LL> A(n), B(m);
-  REP(i, 0, n) { cin >> A[i]; }
-  REP(i, 0, m) { cin >> B[i]; }
-  sort(ALL(A), greater<int>());
-  sort(ALL(B), greater<int>());
-  REP(i, 0, n - 1) {
-    if (A[i] == A[i + 1]) {
-      cout << 0;
-      return 0;
-    }
-  }
-  REP(i, 0, m - 1) {
-    if (B[i] == B[i + 1]) {
-      cout << 0;
-      return 0;
-    }
-  }
-  A.push_back(-1);
-  B.push_back(-1);
 
-  LL ai = 0, bi = 0;
-  LL ans = 1;
-  for (int x = n * m; x > 0; --x) {
-    if (A[ai] == x && B[bi] == x) {
-      ++ai;
-      ++bi;
-    } else if (A[ai] == x) {
-      ++ai;
-      ans = mul(ans, bi);
-    } else if (B[bi] == x) {
-      ++bi;
-      ans = mul(ans, ai);
-    } else {
-      ans = mul(ans, ai * bi - (n * m - x));
+int main() {
+  LL n, l, r;
+  cin >> n >> l >> r;
+  VEC<LL> N(3, (r - l + 1) / 3);
+  for (int i = 0; i < (r - l + 1) % 3; ++i) {
+    ++N[(l + i) % 3];
+  }
+  //DUMP(N);
+  auto dp = MATINIT(LL, n + 1, 3, 0);
+  dp[0][0]=1;
+
+  REP(i, 1, n + 1) {
+    REP(c, 0, 3) {
+      REP(t, 0, 3) {
+        dp[i][c] = add(dp[i][c], mul(dp[i - 1][t], N[(c + 3 - t) % 3]));
+      }
     }
   }
-  cout << ans << endl;
+  cout<<dp[n][0]<<endl;
+
   return 0;
 }

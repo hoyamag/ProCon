@@ -40,47 +40,29 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   return os;
 }
 
-const LL M = 1e9 + 7;
-LL mul(LL a, LL b) { return a * b % M; }
 int main() {
-  LL n, m;
-  cin >> n >> m;
-  VEC<LL> A(n), B(m);
-  REP(i, 0, n) { cin >> A[i]; }
-  REP(i, 0, m) { cin >> B[i]; }
-  sort(ALL(A), greater<int>());
-  sort(ALL(B), greater<int>());
-  REP(i, 0, n - 1) {
-    if (A[i] == A[i + 1]) {
-      cout << 0;
-      return 0;
+  int n, k;
+  cin >> n >> k;
+  string s;
+  cin >> s;
+  int ans = 0;
+  for (char c = 'a'; c <= 'z'; ++c) {
+    int cnt = 0;
+    int num = 0;
+    REP(i, 0, n) {
+      if (s[i] == c) {
+        ++cnt;
+        if (cnt == k) {
+          ++num;
+          cnt = 0;
+        }
+      } else {
+        cnt = 0;
+      }
     }
+    ans = max(ans, num);
   }
-  REP(i, 0, m - 1) {
-    if (B[i] == B[i + 1]) {
-      cout << 0;
-      return 0;
-    }
-  }
-  A.push_back(-1);
-  B.push_back(-1);
+  cout << ans << "\n";
 
-  LL ai = 0, bi = 0;
-  LL ans = 1;
-  for (int x = n * m; x > 0; --x) {
-    if (A[ai] == x && B[bi] == x) {
-      ++ai;
-      ++bi;
-    } else if (A[ai] == x) {
-      ++ai;
-      ans = mul(ans, bi);
-    } else if (B[bi] == x) {
-      ++bi;
-      ans = mul(ans, ai);
-    } else {
-      ans = mul(ans, ai * bi - (n * m - x));
-    }
-  }
-  cout << ans << endl;
   return 0;
 }
