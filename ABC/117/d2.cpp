@@ -49,36 +49,43 @@ LL answer(LL x) {
   }
   return sum;
 }
-
-//嘘解法
 /* test case
 3 2
 2 0 0
 
-this: 4
+this: 5
 true: 5
+my previous wrong sub(but AC): 4
 */
 int main() {
   cin >> N >> K;
   A = VEC<LL>(N);
   REP(i, 0, N) cin >> A[i];
-  LL ma = pow(2, (LL)log2(K));
-  // DUMP(ma);
+  LL ma = pow(2, (LL)log2(K+1));
+  DUMP(ma);
   LL x = 0;
-  for (LL bit = ma; bit > 0; bit >>= 1) {
-    // DUMP("bit: ", bit);
-    LL cnt = 0;
-    REP(i, 0, N) {
-      // if on
-      if ((bit & A[i]) > 0) {
-        ++cnt;
-      }
-    }
-    // DUMP("cnt: ", cnt);
-    if (cnt < (double)N / 2 && x + bit <= K) x += bit;
-  }
   LL ans = 0;
-  ans = answer(x);
+  for (LL digit = ma; digit > 0; digit >>= 1) {
+    if (((K + 1) & digit) == 0) continue;
+    x = K + 1 - digit;
+    for (LL i = (digit >> 1); i > 0; i >>= 1) {
+      if ((x & i) > 0) x -= i;
+    }
+
+    for (LL bit = (digit >> 1); bit > 0; bit >>= 1) {
+      // DUMP("bit: ", bit);
+      LL cnt = 0;
+      REP(i, 0, N) {
+        // if on
+        if ((bit & A[i]) > 0) {
+          ++cnt;
+        }
+      }
+      // DUMP("cnt: ", cnt);
+      if (cnt < (double)N / 2) x += bit;
+    }
+    ans = max(ans, answer(x));
+  }
 
   cout << ans << endl;
 
