@@ -41,36 +41,21 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  int D, G;
-  cin >> D >> G;
-  VEC<int> P(D), C(D);
-  REP(i, 0, D) cin >> P[i] >> C[i];
-  VEC<LL> sum(D, 0);
-  REP(i, 0, D) {
-    REP(j, 0, P[i]) sum[i] += (i + 1) * 100;
-    sum[i] += C[i];
+  LL N;
+  cin >> N;
+  if (N == 0) {
+    cout << 0;
+    return 0;
   }
-  int lim = 1 << (D + 1);
-  int ans = INT32_MAX;
-  REP(bit, 0, lim) {
-    LL point = 0;
-    VEC<bool> used(D, 0);
-    int cnt = 0;
-    REP(i, 0, D) {
-      if (bit & (1 << i)) {
-        point += sum[i];
-        cnt += P[i];
-        used[i] = 1;
-      }
+  string ans = "";
+  while (N != 0) {
+    if (N % 2 == 0) {
+      ans = "0" + ans;
+    } else{
+      ans = "1" + ans;
+      --N;
     }
-    for (int i = D - 1; i >= 0; --i) {
-      if (used[i]) continue;
-      for (int a = 0; a < P[i] && point < G; ++a) {
-        ++cnt;
-        point += (i + 1) * 100;
-      }
-    }
-    ans = min(ans, cnt);
+    N /= (-2);
   }
   cout << ans << endl;
 
