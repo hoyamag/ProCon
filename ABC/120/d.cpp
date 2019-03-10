@@ -18,7 +18,7 @@ void DUMP() { cerr << endl; }
 template <class Head, class... Tail>
 void DUMP(Head &&head, Tail &&... tail) {
   cerr << head << ", ";
-  DUMP(std::move(tail)...);
+DUMP(std::move(tail)...);
 }
 template <typename T>
 ostream &operator<<(ostream &os, vector<T> &vec) {
@@ -46,46 +46,57 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-int N, M;
-VEC<int> A;
-VEC<int> dp;
-const int inf = 1e6;
-const VEC<int> num = {0, 2, 5, 5, 4, 5, 6, 3, 7, 6};
-
+bool has(map<int, int> m, int key) { return m.find(key) != m.end(); }
+const int inf = 1 << 30;
 int main() {
+  int N, M;
   cin >> N >> M;
-
-  A = VEC<int>(M);
-  REP(i, 0, M) cin >> A[i];
-  dp = VEC<int>(N + 1, -inf);
-  dp[0] = 0;
-  REP(i, 0, N + 1) {
-    REP(j, 0, M) {
-      int rem = i - num[A[j]];
-      if (rem >= 0) {
-        dp[i] = max(dp[i], dp[rem] + 1);
-      }
-    }
+  VEC<int> A(M), B(M);
+  REP(i, 0, M) {
+    cin >> A[i] >> B[i];
+    --A[i];
+    --B[i];
   }
-  DUMP(dp);
-  int ansketa = dp[N];
-  string ans = "";
-  int match = N;
-  sort(A.rbegin(), A.rend());
-  REP(i, 0, ansketa) {
-    REP(j, 0, M) {
-      // if A[j] is available, remain will be
-      int ketaRemain = ansketa - i - 1;
-      int matchRemain = match - num[A[j]];
-      if (matchRemain >= 0 && ketaRemain == dp[matchRemain]) {
-        ans += A[j] + '0';
-        match = matchRemain;
-        DUMP(ans, A[j], match);
-        break;
-      }
+  map<int, int> renketu;  // node number to connected minimum edge
+  reverse(ALL(A));
+  reverse(ALL(B));
+  LL huben = N * (N - 1) / 2;
+  VEC<LL> ansreverse(M, huben);
+  VEC<LL> connectedSize(M, 1);  // edge num to connected graph size
+  REP(edge, 0, M) {
+    int left = A[edge];
+    int right = B[edge];
+    int curL = inf;
+    int curR = inf;
+    LL curSizeL = 1;
+    LL curSizeR = 1;
+    if (has(renketu, left)) {
+      curL = renketu[left];
+      curSizeL = connectedSize[left];
     }
-  }
-  cout << ans << endl;
+    if (has(renketu, right)) {
+      curR = renketu[right];
+      curSizeR = connectedSize[right];
+    }
+    if (curL != curR || (curL== inf && curR==inf)) {
+      int cur = min(curL, curR);
+      renketu[left] = renketu[right] = min(cur, edge);
+      connectedSize[left] = connectedSize[right] = curSizeL + curSizeR;
 
+      DUMP(edge, left, right, curL, curR, curSizeL, curSizeR);
+      huben -= curSizeL * curSizeR;
+    }
+
+    ansreverse[edge] = huben;
+  }
+  reverse(ALL(ansreverse));
+  DUMP(ansreverse);
+  // for (auto v : ansreverse) {
+  //   cout << v << endl;
+  // }
+  REP(i,1,M){
+      cout<<ansreverse[i]<<endl;
+  }
+  cout<<N*(N-1)/2<<endl;
   return 0;
 }
