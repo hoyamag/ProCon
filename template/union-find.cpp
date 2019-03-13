@@ -3,14 +3,15 @@ class DisjointSet {
   //参考 蟻本p84
   //均し計算量O(α(N))でほぼ定数
   // ついでに各setにサイズ情報を入れた(根なら、そのsetのsize情報を持ってる)
-  static const int MAX_N = 1e5;
-
-  int par[MAX_N];   // parent
-  int rank[MAX_N];  // the depth of trees
-  int size[MAX_N];  // the size of sets
-  int element_num;  // the number of elements
 
  public:
+  static const int MAX_N = 1e6;
+
+  int par[MAX_N];         // parent
+  int rank[MAX_N];        // the depth of trees
+  long long size[MAX_N];  // the size of sets
+  int element_num;        // the number of elements
+
   // n要素で初期化
   DisjointSet(int n) {
     element_num = n;
@@ -23,11 +24,8 @@ class DisjointSet {
 
   // 木の根を求める
   int find(int x) {
-    if (par[x] == x) {
-      return x;
-    } else {
-      return par[x] = find(par[x]);
-    }
+    if (par[x] == x) return x;
+    return par[x] = find(par[x]);
   }
 
   // xとyの属する集合を併合
@@ -38,7 +36,6 @@ class DisjointSet {
     if (rank[x] < rank[y]) {
       par[x] = y;
       size[y] += size[x];
-
     } else {
       par[y] = x;
       size[x] += size[y];
@@ -59,6 +56,7 @@ std::ostream &operator<<(std::ostream &os, const DisjointSet &d) {
   }
   return os;
 }
+
 int main() {
   std::cout << "0" << std::endl;
   auto d = DisjointSet(10);
