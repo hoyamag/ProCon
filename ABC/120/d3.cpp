@@ -49,14 +49,15 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 class DisjointSet {
   //参考 蟻本p84
   //均し計算量O(α(N))でほぼ定数
-  static const int MAX_N = 1e5;
-
-  int par[MAX_N];   // parent
-  int rank[MAX_N];  // the depth of trees
-  int size[MAX_N];  // the size of sets
-  int element_num;  // the number of elements
+  // ついでに各setにサイズ情報を入れた(根なら、そのsetのsize情報を持ってる)
 
  public:
+  static const int MAX_N = 1e6;
+
+  int par[MAX_N];         // parent
+  int rank[MAX_N];        // the depth of trees
+  long long size[MAX_N];  // the size of sets
+  int element_num;        // the number of elements
   // n要素で初期化
   DisjointSet(int n) {
     element_num = n;
@@ -69,11 +70,8 @@ class DisjointSet {
 
   // 木の根を求める
   int find(int x) {
-    if (par[x] == x) {
-      return x;
-    } else {
-      return par[x] = find(par[x]);
-    }
+    if (par[x] == x) return x;
+    return par[x] = find(par[x]);
   }
 
   // xとyの属する集合を併合
@@ -84,7 +82,6 @@ class DisjointSet {
     if (rank[x] < rank[y]) {
       par[x] = y;
       size[y] += size[x];
-
     } else {
       par[y] = x;
       size[x] += size[y];
@@ -98,7 +95,7 @@ class DisjointSet {
   friend ostream &operator<<(ostream &os, const DisjointSet &d);
 };
 ostream &operator<<(ostream &os, const DisjointSet &d) {
-    os<<"i, p, r, s"<<endl;
+  os << "i, p, r, s" << endl;
   for (int i = 0; i < d.element_num; ++i) {
     os << i << ", " << d.par[i] << ", " << d.rank[i] << ", " << d.size[i]
        << endl;
@@ -106,17 +103,31 @@ ostream &operator<<(ostream &os, const DisjointSet &d) {
   return os;
 }
 int main() {
-    cout<<"0"<<endl;
-  auto d = DisjointSet(10);
-  cout<<"1"<<endl;
-  d.unite(1, 2);
-  cout<<"2"<<endl;
-  d.unite(2, 3);
-  d.unite(4, 5);
-  d.unite(6, 7);
-  d.unite(5, 7);
-  cout<<"Display"<<endl;
-  std::cout << d << endl;
-  cout<<d.same(5,7)<<endl;
-  std::cout << d << endl;
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  LL N, M;
+  cin >> N >> M;
+  VEC<pair<int, int>> edge(M);
+  REP(i, 0, M) {
+    cin >> edge[i].first >> edge[i].second;
+    edge[i].first--;
+    edge[i].second--;
+  }
+  reverse(ALL(edge));
+  LL U = N * (N - 1) / 2;
+  DisjointSet ds(N);
+  list<LL> ans;
+  LL sum = 0;
+  REP(i, 0, M) {
+    ans.push_back(U - sum);
+    int x = ds.find(edge[i].first);
+    int y = ds.find(edge[i].second);
+    if (x != y) {
+      sum += ds.size[x] * ds.size[y];
+      ds.unite(x, y);
+    }
+  }
+  for (auto it = ans.rbegin(); it != ans.rend(); ++it) {
+    cout << *it << endl;
+  }
 }
