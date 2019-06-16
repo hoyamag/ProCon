@@ -46,45 +46,62 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+const int MAXN = 50;
+const int inf = 1 << 30;
+VEC<VEC<int>> X;
+VEC<VEC<int>> Y;
+void show(VEC<VEC<int>> M) {
+  REP(i, 0, M.size()) { DUMP(M[i]); }
+}
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
+  int N;
+  cin >> N;
+  X = MATINIT(int, N, N, inf);
+  Y = MATINIT(int, N, N, inf);
+  REP(i, 0, N) {
+    X[i][i] = 0;
+    Y[i][i] = 0;
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
+  VEC<int> x(N), y(N);
+  REP(i, 0, N) {
+    std::cin >> x[i] >> y[i];
+    x[i]--;
+    y[i]--;
   }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
+  REP(i, 0, N) {
+    REP(j, 0, N) {
+      if (i == j) continue;
+      X[i][j] = x[j] - x[i];
+      Y[i][j] = y[j] - y[i];
     }
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
+  // show(X);
+  // DUMP();
+  // show(Y);
+  // DUMP();
+  int count = 0;
+  REP(i, 0, N) {
+    REP(j, 0, N) {
+      int p = X[i][j];
+      int q = Y[i][j];
+      // DUMP("begin, i,j,p,q", i, j, p, q);
+      int cnt = 0;
+      REP(h, 0, N) {
+        if (h == p) continue;
+        REP(w, 0, N) {
+          if (w == q || h == w) continue;
+          if (X[h][w] == p && Y[h][w] == q) {
+            // DUMP("    ", h, w, cnt);
+            ++cnt;
+          }
+        }
+      }
+      // DUMP("end, p,q,cnt", p, q, cnt);
+      count = max(count, cnt);
     }
   }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  cout << N - count << endl;
 
   return 0;
 }

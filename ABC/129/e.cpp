@@ -46,45 +46,39 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+string L;
+int N;
+VEC<LL> dp;
+/* calculate n^p mod M. O(log(p)) */ long long modpow(long long n, long long p,
+                                                      long long M) {
+  long long ans = 1;
+  while (p > 0) {
+    if (p & 1) ans = (ans * n) % M;
+    n = (n * n) % M;
+    p >>= 1;
+  }
+  return ans;
+}
+LL M = 1e9 + 7;
 
+LL F(LL n, bool freeA, bool freeB) {
+  static LL M = 1e9 + 7;
+  if(n==1)return 1;
+  LL k1 = modpow(3, n, M);
+  if(freeA && freeB){
+    return k1;
+  }
+  LL k2 = F(n - 1, 1, freeB);
+  LL k3 = F(n - 1, freeA, 1);
+  return ((k1 + k2) % M + k3) % M;
+}
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  DUMP("Q)");
+  // cerr<<pow(2,100000)<<endl;
+  cin >> L;
+  N = L.length();
+  dp = VEC<LL>(N);
+  cout<<F(N,0,0)<<endl;
 
   return 0;
 }

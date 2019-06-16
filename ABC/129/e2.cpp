@@ -46,45 +46,65 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+string L;
+int N;
+LL dp[100003][2][2];
+/* calculate n^p mod M. O(log(p)) */ long long modpow(long long n, long long p,
+                                                      long long M) {
+  long long ans = 1;
+  while (p > 0) {
+    if (p & 1) ans = (ans * n) % M;
+    n = (n * n) % M;
+    p >>= 1;
+  }
+  return ans;
+}
+LL M = 1e9 + 7;
 
+LL F(LL n, bool freeA, bool freeB) {
+  static LL M = 1e9 + 7;
+  if (n == 1) return 1;
+  LL k1 = modpow(3, n, M);
+  if (freeA && freeB) {
+    return k1;
+  }
+  LL k2 = F(n - 1, 1, freeB);
+  LL k3 = F(n - 1, freeA, 1);
+  return ((k1 + k2) % M + k3) % M;
+}
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
+  // cerr<<pow(2,100000)<<endl;
+  cin >> L;
+  N = L.length();
+  REP(i, 0, N + 1) {
+    dp[i][0][0] = 0;
+    dp[i][1][0] = 0;
+    dp[i][0][1] = 0;
+    dp[i][1][1] = 0;
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  dp[0][0][0] = 0;
+  dp[0][1][0] = 0;
+  dp[0][0][1] = 0;
 
+  dp[1][0][0] = 1;
+
+  auto update = [&](int i, bool a, bool b) {
+    if(a && b){
+      dp[i+1][a][b]= (3*dp[i][a][b])%M;
+      return ;
+    }
+    dp[i + 1][1][b] = (dp[i + 1][1][b] + dp[i][a][b]) % M;
+    dp[i + 1][a][1] = (dp[i + 1][a][1] + dp[i][a][b]) % M;
+    dp[i + 1][a][b] = (dp[i + 1][a][b] + dp[i][a][b]) % M;
+  };
+  REP(i, 1, N) {
+      update(i,0,0);
+      update(i,1,0);
+      update(i,0,1);
+      update(i,1,1);
+      DUMP(dp[i][0][0], dp[i][0][1], dp[i][1][0], dp[i][1][1]);
+  }
+      DUMP(dp[N][0][0], dp[N][0][1], dp[N][1][0], dp[N][1][1]);
+  cout<<(dp[N][0][0]+dp[N][0][1] + dp[N][1][0] + dp[N][1][1])%M<<endl;
   return 0;
 }

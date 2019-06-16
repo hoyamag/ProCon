@@ -46,45 +46,54 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+struct edge {
+  int u, v, w;
+};
+struct node {
+  int index, w;
+};
+VEC<list<int>> G;
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
+  int N;
+  cin >> N;
+  G = VEC<list<int>>(N);
+  VEC<int> D(N);
+  REP(i, 0, N - 1) {
+    int a, b;
+    cin >> a >> b;
+    a--;
+    b--;
+    G[a].push_back(b);
+    G[b].push_back(a);
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
+  REP(i, 0, N) { cin >> D[i]; }
+  sort(ALL(D));
+  LL sum = 0;
+  REP(i, 0, N - 1) { sum += D[i]; }
+  cout << sum << endl;
+
+  reverse(ALL(D));
+  queue<int> q;
+  VEC<int> ans(N, 0);
+  q.push(0);
+  int index = 0;
+  VEC<bool> used(N, 0);
+  while (!q.empty()) {
+    int node = q.front();
+    q.pop();
+    used[node]=true;
+    ans[node] = D[index];
+    index++;
+    for (auto v : G[node]) {
+      if (used[v]) continue;
+      q.push(v);
     }
-    return 0;
   }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
+  REP(i,0,N){
+    cout<<ans[i]<<" ";
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  cout<<endl;
 
   return 0;
 }

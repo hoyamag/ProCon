@@ -46,45 +46,69 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+const int MAXN = 50;
+const int inf = 1 << 30;
+VEC<VEC<LL>> X;
+VEC<VEC<LL>> Y;
+void show(VEC<VEC<int>> M) {
+  REP(i, 0, M.size()) { DUMP(M[i]); }
+}
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
+  LL N;
+  cin >> N;
+  if (N == 1 || N == 2) {
+    cout << 1 << endl;
     return 0;
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
+  X = MATINIT(LL, N, N, inf);
+  Y = MATINIT(LL, N, N, inf);
+  REP(i, 0, N) {
+    X[i][i] = 0;
+    Y[i][i] = 0;
   }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
+  VEC<pair<LL, LL>> C(N);
+
+  VEC<LL> x(N), y(N);
+  REP(i, 0, N) {
+    std::cin >> x[i] >> y[i];
+    C[i].first = x[i];
+    C[i].second = y[i];
+  }
+  sort(ALL(C));
+  queue<pair<LL, LL>> Q;
+  REP(i, 0, N) {
+    REP(j, 0, N) {
+      if (i == j) continue;
+      X[i][j] = x[j] - x[i];
+      Y[i][j] = y[j] - y[i];
+      Q.push({X[i][j], Y[i][j]});
     }
-    return 0;
   }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
+  LL count = 0;
+  while (!Q.empty()) {
+    LL p = Q.front().first;
+    LL q = Q.front().second;
+    Q.pop();
+    // DUMP("begin, i,j,p,q", i, j, p, q);
+    LL cnt = 0;
+    VEC<bool> used(N, false);
+    REP(i, 0, N) {
+      LL x = C[i].first;
+      LL y = C[i].second;
+      REP(j, 0, N) {
+        if (used[j]) continue;
+        LL nx = C[j].first;
+        LL ny = C[j].second;
+        if (nx - x == p && ny - y == q) {
+          cnt++;
+          used[j] = 1;
+        }
+      }
+      count = max(count, cnt);
     }
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  cout << N - count << endl;
 
   return 0;
 }

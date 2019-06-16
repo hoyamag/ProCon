@@ -47,44 +47,29 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   return os;
 }
 
+const LL MAX_N = 2 * 1e5;
+LL solve(LL M, LL K, LL N) {
+  DUMP(M,K,N);
+  LL distsum = 0;
+  LL weightsum = M*(M-1)/2;
+  LL edgenum = K*(K-1)/2;
+  LL pattern = N*N;
+  REP(i,0,M){
+    distsum += (M-i)*(M-i-1)/2;
+  }
+  DUMP(distsum, weightsum, edgenum);
+  return edgenum*distsum*pattern*weightsum;
+
+}
+
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  LL N,M,K;
+  cin>>N>>M>>K;
+  LL x = solve(M, K, N);
+  LL y = solve(N,K, M);
+  DUMP(x,y);
+  cout<<x+y<<endl;
+
 
   return 0;
 }

@@ -46,45 +46,50 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+int bitcount(int n) {
+  int cnt = 0;
+  while (n > 0) {
+    if ((n & 1) == 1) {
+      cnt++;
+    }
+    n >>= 1;
+  }
+  return cnt;
+}
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
+  int N, M;
+  cin >> N >> M;
+  VEC<int> K(M);
+  VEC<VEC<int>> S(M);
+  REP(i, 0, M) {
+    cin >> K[i];
+    S[i] = VEC<int>(K[i]);
+    REP(j, 0, K[i]) {
+      cin >> S[i][j];
+      S[i][j]--;
     }
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
+  VEC<int> P(M);
+  REP(i, 0, M) cin >> P[i];
+  VEC<int> pattern(M, 0);
+  REP(i, 0, M) {
+    REP(j, 0, K[i]) { pattern[i] += (1 << S[i][j]); }
+  }
+
+  int count =0;
+  REP(bit, 0, 1 << N) {
+    int all = 1;
+    REP(i, 0, M) {
+      int on = bit & pattern[i];
+      if (bitcount(on) % 2 != P[i]) {
+        all = 0;
+        break;
+      }
     }
+    if(all)count++;
   }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  cout<<count<<endl;
 
   return 0;
 }

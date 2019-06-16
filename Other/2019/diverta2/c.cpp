@@ -48,43 +48,71 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
+  int N;
+  cin >> N;
+  VEC<LL> A(N);
+  REP(i, 0, N) cin >> A[i];
+  sort(ALL(A));
+  LL M = 0;
+  LL sumA = 0;
+  LL sumB = 0;
+  REP(i, 0, N) {
+    if (i < N / 2) {
+      sumA += -A[i];
     } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
+      sumA += A[i];
     }
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
+  REP(i, 0, N) {
+    if (i <= N / 2) {
+      sumB += -A[i];
+    } else {
+      sumB += A[i];
     }
   }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
+  int div = 0;
+  bool leftBig = 0;
+  M = max(sumA, sumB);
+  if (sumA >= sumB) {
+    div = N / 2;
+  } else {
+    div = N / 2 + 1;
+    leftBig = 1;
   }
-  cout << endl;
+  VEC<pair<int,int>> D(N);
+  // DUMP(leftBig);
+  if (leftBig) {
+    int index = 0;
+    for (int i = N; i > 0; i -= 2) {
+      D[index] = {i,A[index]};
+      index++;
+    }
+    index = N - 1;
+    for (int i = N - 1; i > 0; i -= 2) {
+      D[index] = {i,A[index]};
+      index--;
+    }
+  } else {
+    int index = N - 1;
+    for (int i = N; i > 0; i -= 2) {
+      D[index] = {i,A[index]};
+      index--;
+    }
+    index = 0;
+    for (int i = N-1; i > 0; i -= 2) {
+      D[index] = {i,A[index]};
+      index++;
+    }
+  }
+  sort(ALL(D));
+  DUMP(D);
+  cout<<D[1].second<<" "<<D[0].second<<endl;
+  int prev=D[1].second-D[0].second;
+  REP(i,2,N){
+    cout<<D[i].second<<" "<<prev<<endl;
+    prev=D[i].second-prev;
+  }
 
+  cout << M << endl;
   return 0;
 }

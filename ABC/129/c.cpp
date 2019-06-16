@@ -47,44 +47,34 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   return os;
 }
 
+LL MM = 1e9 + 7;
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
+  int N, M;
+  cin >> N >> M;
+  VEC<int> A(M);
+  set<int> S;
+  REP(i, 0, M) {
+    cin >> A[i];
+    S.insert(A[i]);
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
+  // DUMP(S);
+  sort(ALL(A));
+  VEC<LL> p(N + 1, 0);
+  p[0] = 1;
+  if (S.count(1)==0) p[1] = 1;
+  REP(i, 2, N + 1) {
+    LL next = 0;
+    if (S.count(i - 1) == 0) {
+      next += p[i - 1];
     }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
+    if (S.count(i - 2) == 0) {
+      next = (p[i - 2] + next) % MM;
     }
+
+    p[i] = next % MM;
   }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  // DUMP(p);
+  cout << p[N] << endl;
 
   return 0;
 }

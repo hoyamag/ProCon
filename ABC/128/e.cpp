@@ -48,43 +48,33 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
+  int N, Q;
+  cin >> N >> Q;
+  VEC<VEC<LL>> I(N, VEC<LL>(3));
+  REP(i, 0, N) {
+    cin >> I[i][0] >> I[i][1] >> I[i][2];
+    I[i][0] -= I[i][2];
+    I[i][1] -= I[i][2];
   }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
+  VEC<LL> D(Q);
+  auto f = [](VEC<LL> a, VEC<LL> b) { return a[0] < b[0]; };
+  sort(ALL(I), f);
+  REP(i, 0, Q) { cin >> D[i]; }
+  int ans = 0;
+  REP(i, 0, Q) {
+    int ok = 0;
+    int ng = N - 1;
+
+    while (abs(ok - ng) > 1) {
+      int mid = ok + ng / 2;
+      if (I[mid][0] > D[i]) {
+        ng = mid;
+      } else {
+        ok = mid;
+      }
     }
-    return 0;
+    cout << I[ok][2] << endl;
   }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
 
   return 0;
 }

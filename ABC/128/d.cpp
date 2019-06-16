@@ -47,44 +47,55 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   return os;
 }
 
+void showPq(priority_queue<LL, VEC<LL>, greater<LL>> pq) {
+  while (pq.empty() == false) {
+    cerr << pq.top() << ", ";
+    pq.pop();
+  }
+  cerr << endl;
+}
+
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
+  LL N, K;
+  cin >> N >> K;
+  VEC<LL> V(N);
+  REP(i, 0, N) cin >> V[i];
+  LL ma = 0;
+  REP(a, 0, K + 1) {
+    REP(b, 0, K - a + 1) {
+      int size = N;
+      int c = K - a - b;
+      // DUMP("begin", a, b, c);
+      priority_queue<LL, VEC<LL>, greater<LL>> pq;
+      LL sum = 0;
+      REP(i, 0, a) {
+        if (size <= 0) break;
+        // DUMP("a   ", V[i]);
+        pq.push(V[i]);
+        sum += V[i];
+        size--;
+      }
+      REP(i, 0, b) {
+        if (size <= 0) break;
+        // DUMP("b   ", V[N - i - 1]);
+        pq.push(V[N - i - 1]);
+        sum += V[N - i - 1];
+        size--;
+      }
+      // showPq(pq);
+      REP(i, 0, c) {
+        if (pq.empty()) break;
+        // DUMP("pq.top   ", pq.top());
+        if (pq.top() >= 0) break;
+        sum -= pq.top();
+        pq.pop();
+        size++;
+      }
+      // DUMP(a, b, c, sum);
+      ma = max(ma, sum);
     }
-    return 0;
   }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  cout << ma << endl;
 
   return 0;
 }

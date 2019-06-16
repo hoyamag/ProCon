@@ -48,43 +48,37 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL M, K;
-  cin >> M >> K;
-  if (K >= (1 << M)) {
-    cout << -1 << endl;
-    return 0;
-  }
-  if (M == 0) {
-    cout << "0 0"<< endl;
-    return 0;
-  }
-  if (M == 1) {
-    if (K == 0) {
-      cout << "0 0 1 1" << endl;
-    } else {
-      cout << -1 << endl;
-    }
-    return 0;
-  }
-  LL lim = (1 << M);
-  VEC<LL> A;
-  REP(i, 0, lim) {
-    if (i != K) {
-      A.push_back(i);
-    }
-  }
-  A.push_back(K);
-  for (LL i = lim - 1; i >= 0; i--) {
-    if (i != K) {
-      A.push_back(i);
+  int N, M;
+  cin >> N >> M;
+  VEC<LL> A(N);
+  REP(i, 0, N) cin >> A[i];
+  VEC<pair<LL, LL>> B(M);
+  REP(i, 0, M) { cin >> B[i].second >> B[i].first; }
+  sort(ALL(A));
+  sort(ALL(B), greater<pair<LL, LL>>());
+  // DUMP(A);
+  // DUMP(B);
+
+  // DUMP("HI");
+  int count = 0;
+  int j = 0;
+  REP(i, 0, M) {
+    // DUMP(i);
+    while (B[i].second > 0) {
+      // DUMP(A);
+      if (B[i].first > A[j]) {
+        A[j] = B[i].first;
+        B[i].second--;
+        j++;
+        count++;
+      } else {
+        break;
+      }
     }
   }
-  A.push_back(K);
-  REP(i, 0, A.size()) {
-    cout << A[i];
-    if (i < A.size() - 1) cout << " ";
-  }
-  cout << endl;
+  LL sum = 0;
+  REP(i, 0, N) { sum += A[i]; }
+  cout << sum << endl;
 
   return 0;
 }
