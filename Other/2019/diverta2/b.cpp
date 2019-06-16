@@ -46,62 +46,29 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-const int MAXN = 50;
-const int inf = 1 << 30;
-VEC<VEC<int>> X;
-VEC<VEC<int>> Y;
-void show(VEC<VEC<int>> M) {
-  REP(i, 0, M.size()) { DUMP(M[i]); }
-}
-
 int main() {
   int N;
   cin >> N;
-  X = MATINIT(int, N, N, inf);
-  Y = MATINIT(int, N, N, inf);
+  VEC<int> X(N), Y(N);
   REP(i, 0, N) {
-    X[i][i] = 0;
-    Y[i][i] = 0;
+    std::cin >> X[i] >> Y[i];
+    X[i]--;
+    Y[i]--;
   }
-  VEC<int> x(N), y(N);
-  REP(i, 0, N) {
-    std::cin >> x[i] >> y[i];
-    x[i]--;
-    y[i]--;
-  }
+  map<pair<int, int>, int> pairs;
   REP(i, 0, N) {
     REP(j, 0, N) {
       if (i == j) continue;
-      X[i][j] = x[j] - x[i];
-      Y[i][j] = y[j] - y[i];
+      int p = X[i] - X[j];
+      int q = Y[i] - Y[j];
+      pairs[{p, q}]++;
     }
   }
-  // show(X);
-  // DUMP();
-  // show(Y);
-  // DUMP();
-  int count = 0;
-  REP(i, 0, N) {
-    REP(j, 0, N) {
-      int p = X[i][j];
-      int q = Y[i][j];
-      // DUMP("begin, i,j,p,q", i, j, p, q);
-      int cnt = 0;
-      REP(h, 0, N) {
-        if (h == p) continue;
-        REP(w, 0, N) {
-          if (w == q || h == w) continue;
-          if (X[h][w] == p && Y[h][w] == q) {
-            // DUMP("    ", h, w, cnt);
-            ++cnt;
-          }
-        }
-      }
-      // DUMP("end, p,q,cnt", p, q, cnt);
-      count = max(count, cnt);
-    }
+  int ma = 0;
+  for (auto p : pairs) {
+    ma = max(ma, p.second);
   }
-  cout << N - count << endl;
+  cout << N - ma << endl;
 
   return 0;
 }
