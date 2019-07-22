@@ -48,21 +48,29 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL L, R;
-  cin >> L >> R;
-  LL M = 2019;
-  LL mi = 2020;
-  REP(b, L + 1, R+1){
-    REP(a, L, b) {
-      // DUMP(a, b);
-      mi = min(mi, a * b % M);
-      if(mi==0){
-        cout<<mi<<endl;
-        return 0;
-      }
+  int N;
+  cin >> N;
+  VEC<int> A(N);
+  VEC<int> B(N, 0);
+  REP(i, 0, N) cin >> A[i];
+  int ball =0;
+  for (int i = N - 1; i >= 0; i--) {
+    int t = i + 1;
+    int j = 2 * t;
+    int cnt = 0;
+    while (j <= N) {
+      cnt += B[j - 1];
+      j += t;
+    }
+    if (cnt % 2 != A[i]) {
+      B[i] = 1;
+      ball++;
     }
   }
-  cout << mi << endl;
+  cout<<ball<<endl;
+  REP(i,0,N){
+    if(B[i])cout<<i+1<<endl;
+  }
 
   return 0;
 }

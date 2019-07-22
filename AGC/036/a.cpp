@@ -46,23 +46,57 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+std::map<long long, long long> primeFactorization(
+    long long n) { /* prime factorization * nを素因数分解する */
+  std::map<long long, long long> pf;
+  for (long long i = 2; i * i <= n; ++i) {
+    while (n % i == 0) {
+      n /= i;
+      ++pf[i];
+    }
+  }
+  if (n > 1) {
+    ++pf[n];
+  }
+  return pf;
+}
 
 int main() {
-  LL L, R;
-  cin >> L >> R;
-  LL M = 2019;
-  LL mi = 2020;
-  REP(b, L + 1, R+1){
-    REP(a, L, b) {
-      // DUMP(a, b);
-      mi = min(mi, a * b % M);
-      if(mi==0){
-        cout<<mi<<endl;
-        return 0;
+  LL S;
+  cin >> S;
+  auto pf = primeFactorization(S);
+  VEC<LL> keys;
+  for (auto v : pf) {
+    keys.push_back(v.first);
+  }
+  LL lim = 1e9;
+  DUMP(keys);
+  reverse(ALL(keys));
+  LL a = 1;
+  LL ma = 1, mb = 1;
+  for (auto v : keys) {
+    REP(i, 0, pf[v]) {
+      if (ma < mb) {
+        ma *= v;
+      } else {
+        mb *= v;
+      }
+      if (ma > lim || mb > lim) {
+        DUMP(v, pf[v], ma, mb);
+        assert(0);
       }
     }
   }
-  cout << mi << endl;
+  // for (a = sqrt(S) + 1; a >= 1; a--) {
+  //   LL b = S / a;
+  //   LL bp = (S + a - 1) / a;
+  //   if (b == bp) {
+  //     ma = a;
+  //     mb = b;
+  //     break;
+  //   }
+  // }
+  cout << 0 << " " << 0 << " " << 0 << " " << ma << " " << mb << endl;
 
   return 0;
 }

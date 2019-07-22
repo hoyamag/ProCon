@@ -48,21 +48,22 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL L, R;
-  cin >> L >> R;
-  LL M = 2019;
-  LL mi = 2020;
-  REP(b, L + 1, R+1){
-    REP(a, L, b) {
-      // DUMP(a, b);
-      mi = min(mi, a * b % M);
-      if(mi==0){
-        cout<<mi<<endl;
-        return 0;
-      }
-    }
+  LL N;
+  cin >> N;
+  VEC<LL> A(N);
+  REP(i, 0, N) cin >> A[i];
+  VEC<LL> B(N, 0), C(N, 0);
+  B[0] = A[0];
+  C[N - 1] = A[N - 1];
+  REP(i, 1, N) {
+    B[i] = max(B[i - 1], A[i]);
+    C[N - i - 1] = max(C[N - i], A[N - i - 1]);
   }
-  cout << mi << endl;
+  REP(i, 0, N) {
+    LL left = i - 1 >= 0 ? B[i - 1] : 0;
+    LL right = i + 1 < N ? C[i + 1] : 0;
+    cout << max(left,right)<<endl;
+  }
 
   return 0;
 }

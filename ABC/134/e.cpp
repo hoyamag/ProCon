@@ -46,23 +46,54 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+void show(priority_queue<LL, vector<LL>, greater<LL>> pq) {
+  cerr << "{ ";
+  while (!pq.empty()) {
+    LL a = pq.top();
+    pq.pop();
+    cerr << a << ", ";
+  }
+  cerr << "}" << endl;
+}
 
 int main() {
-  LL L, R;
-  cin >> L >> R;
-  LL M = 2019;
-  LL mi = 2020;
-  REP(b, L + 1, R+1){
-    REP(a, L, b) {
-      // DUMP(a, b);
-      mi = min(mi, a * b % M);
-      if(mi==0){
-        cout<<mi<<endl;
-        return 0;
+  int N;
+  cin >> N;
+  VEC<LL> A(N);
+  LL inf = 1e9 + 3;
+  VEC<LL> tmp(N, inf);
+  REP(i, 0, N) { cin >> A[i]; }
+  priority_queue<LL, vector<LL>, greater<LL>> pq;
+    LL ma = -1;
+  for (int i = N - 1; i >= 0; i--) {
+    // DUMP(i, A[i], ma);
+    bool pushed = 0;
+    int index = 0;
+    while (!pq.empty()) {
+      // DUMP("H");
+      // if (A[i] >= ma) break;
+      auto top = pq.top();
+      if (A[i] < top) {
+        pushed = 1;
+        pq.pop();
+        ma = max(ma, A[i]);
+        pq.push(A[i]);
+        break;
       }
+      pq.pop();
+      tmp[index] = top;
+      index++;
     }
+    // show(pq);
+    if (!pushed) {
+      ma = max(ma, A[i]);
+      pq.push(A[i]);
+    }
+    // show(pq);
+    REP(i, 0, index) { pq.push(tmp[i]); }
+    // show(pq);
   }
-  cout << mi << endl;
+  cout << pq.size() << endl;
 
   return 0;
 }
