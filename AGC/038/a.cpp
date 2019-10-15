@@ -46,28 +46,83 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
+int main() {
+  int H, W, A, B;
+  cin >> H >> W >> A >> B;
+  auto M = MATINIT(int, H, W, 0);
+  auto invalid = [&]() -> bool {
+    REP(i, 0, H) {
+      int c = 0;
+      REP(j, 0, W) {
+        if (M[i][j]) c++;
+      }
+      if (c != A && W - c != A) return 1;
+    }
+    REP(j, 0, W) {
+      int c = 0;
+      REP(i, 0, H) {
+        if (M[i][j]) c++;
+      }
+      if (c != B && H - c != B) return 1;
+    }
+    return 0;
+  };
+  if (A > W / 2 || B > H / 2) {
+    cout << "No" << endl;
+    return 0;
+  }
+  if (A == 0 || B == 0) {
+    if (A == 0) {
+      REP(j, 0, W) {
+        REP(i, 0, B) { M[i][j] = 0; }
+        REP(i, B, H) { M[i][j] = 1; }
+      }
+    } else {
+      REP(i, 0, H) {
+        REP(j, 0, A) { M[i][j] = 0; }
+        REP(j, A, W) { M[i][j] = 1; }
+      }
+    }
+    if (invalid()) {
+      cout << "No" << endl;
+      return 0;
+    }
+    REP(i, 0, H) {
+      REP(j, 0, W) { cout << M[i][j]; }
+      cout << '\n';
+    }
+    return 0;
+  }
+  if (H * A != W * B) {
+    cout << "No" << endl;
+    return 0;
+  }
+  if (A < B) {
+    REP(i, 0, H) {
+      REP(j, 0, A) {
+        int h = i;
+        int w = (i + j) % W;
+        M[h][w] = 1;
+      }
+    }
+  } else {
+    REP(j, 0, W) {
+      REP(i, 0, B) {
+        int h = (i+j)%H;
+        int w = j;
+        M[h][w] = 1;
+      }
     }
   }
-  if (n > 1) {
-    ++pf[n];
+  // DUMP(M);
+  if (invalid()) {
+    cout << "No" << endl;
+    return 0;
   }
-  return pf;
-}
+  REP(i, 0, H) {
+    REP(j, 0, W) { cout << M[i][j]; }
+    cout << '\n';
+  }
 
-int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
   return 0;
 }

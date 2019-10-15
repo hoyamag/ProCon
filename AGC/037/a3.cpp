@@ -46,28 +46,42 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
+
+int N;
+int main() {
+  string S;
+  cin >> S;
+  N = S.length();
+  VEC<int> C;
+  int row = 1;
+  REP(i, 0, N - 1) {
+    if (S[i] != S[i + 1]) {
+      C.push_back(row);
+      row = 1;
+    } else {
+      row++;
     }
   }
-  if (n > 1) {
-    ++pf[n];
+  C.push_back(row);
+  //   DUMP(C);
+  auto calc = [&](int i) -> int {
+    return  i / 3 * 2 + (i % 3 > 0 ? 1 : 0);
+  };
+  int cnt = 0;
+  REP(i, 0, C.size() - 1) {
+      if (C[i] % 3 >= 2 && C[i + 1] % 3 >= 2) {
+        C[i]--;
+        C[i + 1]--;
+        cnt++;
+      }
   }
-  return pf;
-}
+  LL sum = 0;
+  REP(i, 0, C.size()) {
+    int s = C[i] / 3 * 2 + (C[i] % 3 > 0 ? 1 : 0);
+    sum += s;
+  }
+  //   DUMP("cnt, sum:", cnt, sum);
+  cout << cnt + sum << endl;
 
-int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
   return 0;
 }

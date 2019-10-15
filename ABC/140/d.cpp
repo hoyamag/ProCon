@@ -46,28 +46,40 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
 
 int main() {
-  ULL S;
+  int N, K;
+  cin >> N >> K;
+  string S;
   cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  N = S.length();
+  int point=0;
+  int optimal = N-1;
+  REP(i,0,N-1){
+    if(S[i]==S[i+1])point++;
+  }
+  int plus=2*K;
+  cout<<min(optimal, point+plus)<<endl;
+  // VEC<int> C;
+  // int cnt = 1;
+  // C.push_back(0);
+  // REP(i, 0, N - 1) {
+  //   if (S[i] != S[i + 1]) {
+  //     C.push_back(cnt);
+  //     cnt = 1;
+  //   } else {
+  //     cnt++;
+  //   }
+  // }
+  // C.push_back(cnt);
+  // DUMP(C);
+  // int m = C.size();
+  // int mid = m / 2;
+  // LL sum = 0;
+  // REP(i, 0, K) {
+  //   if (mid - 1 >= 0) sum += C[mid - 1];
+  //   if (mid + 1 < C.size()) sum += C[mid + 1];
+  // }
+
   return 0;
 }

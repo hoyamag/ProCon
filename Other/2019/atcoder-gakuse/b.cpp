@@ -46,28 +46,42 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
+ULL sum(ULL n) { return (n * (n + 1) / 2) % ((LL)1e9 + 7); }
 
 int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  ULL N, K;
+  cin >> N >> K;
+  VEC<ULL> A(N);
+  VEC<LL> same(2002, 0);
+  REP(i, 0, N) {
+    cin >> A[i];
+    same[A[i]]++;
+  }
+  ULL orig = 0;
+  REP(i, 0, N) {
+    REP(j, i + 1, N) {
+      if (A[i] > A[j]) orig++;
+    }
+  }
+  // DUMP(orig);
+  ULL MOD = 1e9 + 7;
+  sort(ALL(A));
+  reverse(ALL(A));
+  ULL num;
+  ULL ans = orig * K;
+  // DUMP(A);
+  VEC<ULL> lowerNum(2002, 0);
+  REP(i, 0, N - 1) {
+    if (A[i] == A[i + 1]) continue;
+    lowerNum[A[i]] = N - i - 1;
+  }
+  // DUMP(lowerNum);
+  REP(i, 0, lowerNum.size()) {
+    ULL s = (lowerNum[i] * sum(K - 1)) % MOD;
+    // DUMP(lowerNum[i], sum(K-1), s);
+    ans = (ans +  (s*same[i])%MOD)%MOD;
+  }
+  cout << ans << endl;
+
   return 0;
 }

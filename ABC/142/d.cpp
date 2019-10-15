@@ -46,6 +46,26 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
+
+bool isPrime(
+    int n) { /* returns whether n is prime number or not * n should be in range
+                [0, lim]. * to see detail, search 'Sieve of Eratosthenes' */
+  static int lim = 1e5;
+  static bool done = false;
+  static vector<bool> isp(lim + 1, 1);
+  if (!done) {
+    isp[0] = isp[1] = false;
+    for (int i = 2; i <= lim; i++) {
+      if (isp[i]) {
+        for (int j = i + i; j <= lim; j += i) {
+          isp[j] = false;
+        }
+      }
+    }
+    done = true;
+  }
+  return isp[n];
+}
 std::map<long long, long long> primeFactorization(
     long long n) { /* prime factorization * nを素因数分解する */
   std::map<long long, long long> pf;
@@ -62,12 +82,18 @@ std::map<long long, long long> primeFactorization(
 }
 
 int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  LL A,B;
+  cin>>A>>B;
+  auto ma = primeFactorization(A);
+  auto mb = primeFactorization(B);
+  // DUMP(ma);
+  // DUMP(mb);
+  LL cnt= 1;
+  for(auto va:ma){
+    if(mb[va.first]!=0)cnt++;
+  }
+  cout<<cnt<<endl;
+
+
   return 0;
 }

@@ -46,28 +46,40 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
+
+VEC<VEC<int>> pos('z' - 'a' + 1);
+int main() {
+  cin.tie(0);
+  ios::sync_with_stdio(false);
+  string S, T;
+  cin >> S >> T;
+  REP(i, 0, S.length()) { pos[S[i] - 'a'].reserve(1e5); }
+  REP(i, 0, S.length()) { pos[S[i] - 'a'].push_back(i); }
+  LL loopnum = 0;
+  int prevpos = -1;
+  // REP(i, 'a', 'z' + 1) { DUMP((char)i, pos[i - 'a']); }
+  REP(i, 0, T.length()) {
+    if (pos[T[i] - 'a'].size() == 0) {
+      cout << -1 << endl;
+      return 0;
     }
   }
-  if (n > 1) {
-    ++pf[n];
+  REP(i, 0, T.length()) {
+    auto& poslist = pos[T[i] - 'a'];
+    // DUMP(poslist);
+    if (prevpos >= poslist[poslist.size() - 1]) {
+      // DUMP("prevpos>max");
+      loopnum++;
+      prevpos = poslist[0];
+      continue;
+    }
+    int newpos = *upper_bound(ALL(poslist), prevpos);
+    // DUMP("prev, new:", prevpos, newpos);
+    prevpos = newpos;
   }
-  return pf;
-}
+  // DUMP("loopnum:", loopnum);
+  LL ans = loopnum * S.length() + prevpos + 1;
+  printf("%lld\n", ans);
 
-int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
   return 0;
 }

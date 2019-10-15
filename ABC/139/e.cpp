@@ -46,28 +46,56 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
+VEC<VEC<int>> G;
 
 int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  int N;
+  cin >> N;
+  VEC<queue<int>> TO(N);
+  REP(i, 0, N) {
+    REP(j, 0, N - 1) {
+      int a;
+      scanf("%d", &a);
+      a--;
+      TO[i].push(a);
+    }
+  }
+  LL cnt = 0;
+  LL sum = N * (N - 1);
+  LL days = 0;
+  int prev = cnt;
+  // これは通らないけど変更点をqueueに入れるように舐め方を変えると通るらしい
+  while (cnt < sum && days < sum + 2) {
+    VEC<int> done(N, 0);
+    REP(i, 0, N) {
+      if (TO[i].size() > 0) {
+        int p = TO[i].front();
+        if (TO[p].size() > 0) {
+          if (i == TO[p].front()) {
+            cnt++;
+            done[i] = 1;
+            done[p] = 1;
+            // DUMP(days, cnt, i + 1, p + 1);
+          }
+        }
+      }
+    }
+    days++;
+    if (cnt == prev) {
+      cout << -1 << endl;
+      return 0;
+    } else {
+      prev = cnt;
+    }
+    REP(i, 0, N) {
+      if (done[i]) TO[i].pop();
+    }
+  }
+  if (days == sum + 2) {
+    cout << -1 << endl;
+    return 0;
+  }
+  printf("%lld\n", days);
+
   return 0;
 }

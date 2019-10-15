@@ -46,28 +46,30 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
 
 int main() {
-  ULL S;
-  cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  int N;
+  cin >> N;
+  VEC<int> A(N), B(N), C(N, 0);
+  REP(i, 0, N) {
+    cin >> A[i];
+    A[i]--;
+  }
+  REP(i, 0, N) { cin >> B[i]; }
+  REP(i, 0, N - 1) { cin >> C[i]; }
+  LL sum = 0;
+  int pre = -1;
+  REP(i, 0, N) {
+    int j = A[i];
+    LL s = B[j];
+    if (pre == j - 1) {
+      s += C[j - 1];
+    }
+    sum += s;
+    // DUMP(sum, j, pre);
+    pre = j;
+  }
+  cout << sum << endl;
+
   return 0;
 }

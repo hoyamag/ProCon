@@ -46,28 +46,35 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-std::map<long long, long long> primeFactorization(
-    long long n) { /* prime factorization * nを素因数分解する */
-  std::map<long long, long long> pf;
-  for (long long i = 2; i * i <= n; ++i) {
-    while (n % i == 0) {
-      n /= i;
-      ++pf[i];
-    }
-  }
-  if (n > 1) {
-    ++pf[n];
-  }
-  return pf;
-}
 
+int N;
+int dfs(string &S, int st) {
+//   DUMP("st ", st);
+  //   if (st < N && st+1>=N) return 1;
+  if (st >= N) return 0;
+
+  if (S[st] != S[st + 1]) {
+    int l = dfs(S, st + 1) + 1;
+    // DUMP("  ", l);
+    return l;
+  }
+  if (st + 2 < N) {
+    int l = dfs(S, st + 3) + 2;
+    // DUMP("  ", l);
+    return l;
+  }
+  return -(1 << 30);
+}
 int main() {
-  ULL S;
+  string S;
   cin >> S;
-  ULL lim = 1e9;
-  ULL x2 = (lim-S%lim)%lim;
-  ULL x1 = (S+lim-1)/lim;
-  printf("%lld %lld %lld %lld %lld %lld\n", 0LL, 0LL, x1, 1LL, x2, (LL)1e9);
-  cerr<<x1*lim-x2<<endl;
+  N = S.length();
+  int ans = dfs(S, 0) ;
+//   DUMP(ans);
+  if (N >= 2) {
+    ans = max(ans, dfs(S, 2) + 1);
+  }
+  cout << ans << endl;
+
   return 0;
 }
