@@ -50,6 +50,21 @@ class Position;
 class Robot;
 class Block;
 
+class Direction {
+ public:
+  static const char UP = 'U';
+  static const char DOWN = 'D';
+  static const char LEFT = 'L';
+  static const char RIGHT = 'R';
+  char dir;
+  Direction() { dir = 0; }
+  Direction(char c) { dir = c; }
+  string toString() {
+    string s;
+    s.push_back(dir);
+    return s;
+  }
+};
 class Position {
  public:
   int y, x;
@@ -61,18 +76,19 @@ class Position {
     this->y = y;
     this->x = x;
   }
+  string toString() { return to_string(y) + " " + to_string(x); }
 };
 class Robot {
  public:
   Position pos;
-  char dir;
+  Direction dir;
   Robot() {
     this->pos = Position();
-    dir = 0;
+    this->dir = Direction();
   }
   Robot(int y, int x, char c) {
     this->pos = Position(y, x);
-    this->dir = c;
+    this->dir = Direction(c);
   }
 };
 class Block {
@@ -81,10 +97,41 @@ class Block {
   Block() { this->pos = Position(); }
   Block(int y, int x) { this->pos = Position(y, x); }
 };
+class Guide {
+ public:
+  Position pos;
+  Direction dir;
+  Guide() {}
+  Guide(Position pos, Direction d) {
+    this->pos = pos;
+    this->dir = dir;
+  }
+  Guide(int y, int x, char c) {
+    auto g = Guide(Position(y, x), Direction(c));
+    this->pos = g.pos;
+    this->dir = g.dir;
+  }
+  string toString() { return pos.toString() + " " + dir.toString(); }
+};
+class Guides {
+ public:
+  VEC<Guide> guides;
+  Guides() { guides = VEC<Guide>(0); };
+  Guides(int n) { guides = VEC<Guide>(n); }
+  string toString() {
+    stringstream s;
+    int n = guides.size();
+    s << n << endl;
+    REP(i, 0, n - 1) { s << guides[i].toString() << endl; }
+    if (n - 1 >= 0) s << guides[n - 1].toString();
+    return s.str();
+  }
+};
 int N, RobotNum, BlockNum;
 Position Goal;
 VEC<Robot> R;
 VEC<Block> B;
+Guides G;
 
 int main() {
   cin >> N >> RobotNum >> BlockNum;
@@ -104,6 +151,8 @@ int main() {
     cin >> y >> x;
     B[i] = Block(y, x);
   }
+  G = Guides(0);
+  cout << G.toString() << endl;
 
   return 0;
 }
