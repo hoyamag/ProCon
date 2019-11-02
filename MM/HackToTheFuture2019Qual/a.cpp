@@ -55,7 +55,11 @@ class Direction {
   static char const RIGHT = 'R';
   char dir;
   Direction() { dir = 0; }
-  Direction(char c) { dir = c; }
+  Direction(char c) { 
+    dir = c; 
+    cerr<<"Direction constructor: dir="<<dir<<", c="<<c<<endl;
+  }
+
   string toString() {
     string s;
     s.push_back(dir);
@@ -65,7 +69,15 @@ class Direction {
   bool isDown() const { return dir == DOWN; }
   bool isLeft() const { return dir == LEFT; }
   bool isRight() const { return dir == RIGHT; }
-  string toString() const { return string(1, dir); }
+  string toString() const {
+    cerr << "Direction, toString, dir "<<dir << endl;
+    cerr << "string(1, dir)" << string(1, dir) << endl;
+    return string(1, dir);
+  }
+  char toChar() const {
+    cerr << "Direction, toChar, dir "<<dir << endl;
+    return (dir);
+  }
 };
 Direction DirectionUp = Direction('U');
 Direction DirectionDown = Direction('D');
@@ -208,11 +220,20 @@ class Cell {
     robots.insert(id);
     robotArrived = true;
   }
-  void addGuide(Guide g) { guide = new Guide(g); }
+  void addGuide(Guide g) {
+    cerr << "Add Guide " << g.toString() << endl;
+    guide = new Guide(g.pos, g.dir);
+    cerr << "Add Guide " << guide->toString() << endl;
+  }
+  void removeGuide() { guide = NULL; }
   char toChar() const {
     if (robots.size() != 0) return 'R';
     if (block != NULL) return 'B';
-    if (guide != NULL) return 'g';
+    if (guide != NULL) {
+      cerr << "guide->dir.toChar():" << (guide->dir.toChar())
+           << ", guide->dir.dir:" << guide->dir.dir << endl;
+      return guide->dir.toChar();
+    }
 
     return '.';
   }
@@ -280,27 +301,33 @@ class Simulator {
   Robots robots;
   Blocks blocks;
   Guides guides;
-  Board board;
+  Board *board_p;
   Position goal;
   Simulator() {}
-  Simulator(Robots r, Blocks b, Guides g, Board board, Position goal) {
+  Simulator(Robots &r, Blocks &b, Guides &g, Board &board, Position &goal) {
     robots = r;
     blocks = b;
     guides = g;
-    this->board = board;
+    this->board_p = &board;
     this->goal = goal;
+
+    // cerr << "board" << hex << &board << endl;
+    // cerr << "this->board" << hex << &(this->board_p) << endl;
   }
   LL simulate() {
+    Board &board = *board_p;
     int n = board.size();
     REP(i, 0, n * n) { simulate_next(); }
     return calc_score();
   }
   void simulate_next() {
+    Board &board = *board_p;
     REP(i, 0, robots.size()) { robot_next_turn(robots.robots[i], board, goal); }
     board.show();
-    cerr << robots.toString() << endl;
+    // cerr << robots.toString() << endl;
   }
   LL calc_score() {
+    Board &board = *board_p;
     int A = board.get(goal).robots.size();
     int B = guides.size();
     int C = 0;
@@ -314,18 +341,26 @@ class Simulator {
   LL calculate_point(int A, int B, int C) { return 1000 * A - 10 * B + C; }
 };
 
-VEC<VEC<bool>> used;
-void locate_guide(Board &board, Position pos, Direction dir) {
-  if (used[pos.y][pos.x]) return;
-  auto &cell = board.get(pos);
-  if (cell.isBlockAvailable()) return;
-  cell.addGuide(Guide(pos, dir));
-  locate_guide(board, pos.up(), DirectionDown);
-  locate_guide(board, pos.down(), DirectionUp);
-  locate_guide(board, pos.left(), DirectionRight);
-  locate_guide(board, pos.right(), DirectionLeft);
-}
-
+class GuideLocator {
+ public:
+  VEC<VEC<bool>> used;
+  GuideLocator(int N) { used = VEC<VEC<bool>>(N, VEC<bool>(N, false)); }
+  void locate_guide(Board &board, Position pos, Direction dir) {
+    // cerr << hex << &board << endl;
+    // cerr << "a" << pos.toString() << endl;
+    if (used[pos.y][pos.x]) return;
+    // cerr << "b" << pos.toString() << endl;
+    used[pos.y][pos.x] = true;
+    auto &cell = board.get(pos);
+    if (cell.isBlockAvailable()) return;
+    // cerr << "c" << pos.toString() << endl;
+    cell.addGuide(Guide(pos, dir));
+    locate_guide(board, pos.up(), DirectionDown);
+    locate_guide(board, pos.down(), DirectionUp);
+    locate_guide(board, pos.left(), DirectionRight);
+    locate_guide(board, pos.right(), DirectionLeft);
+  }
+};
 int main() {
   int N, RobotNum, BlockNum;
   Position Goal;
@@ -352,7 +387,12 @@ int main() {
   }
   G = Guides(0);
   Board board = Board(N, R, B, G);
+  // cerr << "board in main" << hex << &board << endl;
   Simulator sim = Simulator(R, B, G, board, Goal);
+  GuideLocator guide_locator = GuideLocator(N);
+  guide_locator.locate_guide(board, Goal, DirectionUp);
+  board.get(Goal).removeGuide();
+
   sim.simulate();
   cerr << "score " << sim.calc_score() << endl;
 
