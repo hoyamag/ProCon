@@ -28,7 +28,7 @@ ostream &operator<<(ostream &os, vector<T> &vec) {
   return os;
 }
 template <typename T>
-ostream &operator<<(ostream &os, set<T> &s) {
+ostream &operator<<(ostream &os, set<T> const &s) {
   os << "{";
   for (auto p : s) os << p << ",";
   os << "}";
@@ -46,15 +46,6 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-class Position;
-class Robot;
-class Robots;
-class Block;
-class Blocks;
-class Guide;
-class Guides;
-class Board;
-class Cell;
 
 class Direction {
  public:
@@ -70,30 +61,38 @@ class Direction {
     s.push_back(dir);
     return s;
   }
-  bool isUp() { return dir == UP; }
-  bool isDown() { return dir == DOWN; }
-  bool isLeft() { return dir == LEFT; }
-  bool isRight() { return dir == RIGHT; }
+  bool isUp() const { return dir == UP; }
+  bool isDown() const { return dir == DOWN; }
+  bool isLeft() const { return dir == LEFT; }
+  bool isRight() const { return dir == RIGHT; }
+  string toString() const { return string(1, dir); }
 };
+Direction DirectionUp = Direction('U');
+Direction DirectionDown = Direction('D');
+Direction DirectionLeft = Direction('L');
+Direction DirectionRight = Direction('R');
 class Position {
-  static int n;
-
  public:
+  static int N;
   int y, x;
   Position() {
     y = -1;
     x = -1;
   };
   Position(int ny, int nx) {
-    this->y = (n + ny) % n;
-    this->x = (n + nx) % n;
+    this->y = (N + ny) % N;
+    this->x = (N + nx) % N;
   }
+  Position up() const { return Position(y - 1, x); }
+  Position down() const { return Position(y + 1, x); }
+  Position left() const { return Position(y, x - 1); }
+  Position right() const { return Position(y, x + 1); }
   string toString() { return to_string(y) + " " + to_string(x); }
   void update(int ny, int nx) {
-    this->y = (n + ny) % n;
-    this->x = (n + nx) % n;
+    this->y = (N + ny) % N;
+    this->x = (N + nx) % N;
   }
-  Position nextPosition(Direction dir) {
+  Position const nextPosition(Direction const dir) {
     if (dir.isUp()) {
       return Position(y - 1, x);
     } else if (dir.isDown()) {
@@ -105,90 +104,13 @@ class Position {
     }
     return Position(y, x);
   }
-  bool operator==(const Position &b) { return (y == b.y) && (x == b.x); }
+  string toString() const {
+    return "(" + to_string(y) + "," + to_string(x) + ")";
+  }
+  bool operator==(Position const &b) const { return (y == b.y) && (x == b.x); }
 };
-class Robot {
- public:
-  int id;
-  Position pos;
-  Direction dir;
-  Robot() {
-    id = -1;
-    this->pos = Position();
-    this->dir = Direction();
-  }
-  Robot(int id, int y, int x, char c) {
-    this->id = id;
-    this->pos = Position(y, x);
-    this->dir = Direction(c);
-  }
-  void next_turn(Board &board, const Position &goal) {
-    if (pos == goal) {
-      return;
-    }
-    Cell &cell = board.get(pos);
-    if (cell.isGuideAvailable()) {
-      auto guide = *cell.guide;
-      dir = guide.dir;
-    }
-    auto next_pos_raw = pos.nextPosition(dir);
-    auto &next_cell = board.get(next_pos_raw);
-    if (next_cell.isBlockAvailable()) {
-      return;
-    }
-    cell.removeRobot(id);
-    next_cell.addRobot(id);
-    pos = next_pos_raw;
-  }
-};
-class Board {
-  VEC<VEC<Cell>> board;
+int Position::N;
 
- public:
-  Board() {}
-  Board(int n, Robots robots, Blocks blocks, Guides guides) {
-    board = VEC<VEC<Cell>>(n, VEC<Cell>(n));
-    REP(i, 0, robots.size()) {
-      auto t = robots.robots[i];
-      board[t.pos.y][t.pos.x].robots.insert(t.id);
-    }
-    REP(i, 0, blocks.size()) {
-      auto t = blocks.blocks[i];
-      board[t.pos.y][t.pos.x].block = &t;
-    }
-    REP(i, 0, guides.size()) {
-      auto t = guides.guides[i];
-      board[t.pos.y][t.pos.x].guide = &t;
-    }
-  }
-  size_t size() { return board.size(); }
-  Cell &get(const Position &p) { return board[p.y][p.x]; }
-};
-class Cell {
- public:
-  set<int> robots;
-  Block *block;
-  Guide *guide;
-  bool robotArrived;
-  Cell() {
-    block = NULL;
-    guide = NULL;
-    robotArrived = false;
-  }
-  bool isRobotAvailable() { return robots.size() != 0; }
-  bool isBlockAvailable() { return block != NULL; }
-  bool isGuideAvailable() { return guide != NULL; }
-  void removeRobot(int id) { robots.erase(id); }
-  void addRobot(int id) {
-    robots.insert(id);
-    robotArrived = true;
-  }
-  // Cell(Robot *r, Block *b, Guide *g){
-  //   robot=r;
-  //   block=b;
-  //   guide=g;
-  // }
-};
 class Block {
  public:
   Position pos;
@@ -211,6 +133,47 @@ class Guide {
   }
   string toString() { return pos.toString() + " " + dir.toString(); }
 };
+class Robot {
+ public:
+  int id;
+  Position pos;
+  Direction dir;
+  Robot() {
+    id = -1;
+    this->pos = Position();
+    this->dir = Direction();
+  }
+  Robot(int id, int y, int x, char c) {
+    this->id = id;
+    this->pos = Position(y, x);
+    this->dir = Direction(c);
+  }
+  string toString() const {
+    stringstream ss;
+    ss << "id:" << id << " pos" << pos.toString() << " dir:" << dir.toString();
+    return ss.str();
+  }
+  Position getPosition() const { return pos; }
+};
+class Robots {
+ public:
+  VEC<Robot> robots;
+  Robots() {}
+  Robots(int n) { robots = VEC<Robot>(n); }
+  size_t size() { return robots.size(); }
+  string toString() const {
+    stringstream ss;
+    for (auto &v : robots) ss << v.toString() << endl;
+    return ss.str();
+  }
+};
+class Blocks {
+ public:
+  VEC<Block> blocks;
+  Blocks() {}
+  Blocks(int n) { blocks = VEC<Block>(n); }
+  size_t size() { return blocks.size(); }
+};
 class Guides {
  public:
   VEC<Guide> guides;
@@ -226,20 +189,92 @@ class Guides {
   }
   size_t size() { return guides.size(); }
 };
-class Robots {
+class Cell {
  public:
-  VEC<Robot> robots;
-  Robots() {}
-  Robots(int n) { robots = VEC<Robot>(n); }
-  size_t size() { return robots.size(); }
+  set<int> robots;
+  Block *block;
+  Guide *guide;
+  bool robotArrived;
+  Cell() {
+    block = NULL;
+    guide = NULL;
+    robotArrived = false;
+  }
+  bool isRobotAvailable() { return robots.size() != 0; }
+  bool isBlockAvailable() { return block != NULL; }
+  bool isGuideAvailable() { return guide != NULL; }
+  void removeRobot(int id) { robots.erase(id); }
+  void addRobot(int id) {
+    robots.insert(id);
+    robotArrived = true;
+  }
+  void addGuide(Guide g) { guide = new Guide(g); }
+  char toChar() const {
+    if (robots.size() != 0) return 'R';
+    if (block != NULL) return 'B';
+    if (guide != NULL) return 'g';
+
+    return '.';
+  }
+  // Cell(Robot *r, Block *b, Guide *g){
+  //   robot=r;
+  //   block=b;
+  //   guide=g;
+  // }
 };
-class Blocks {
+class Board {
+  VEC<VEC<Cell>> board;
+
  public:
-  VEC<Block> blocks;
-  Blocks() {}
-  Blocks(int n) { blocks = VEC<Block>(n); }
-  size_t size() { return blocks.size(); }
+  Board() {}
+  Board(int n, Robots robots, Blocks blocks, Guides guides) {
+    board = VEC<VEC<Cell>>(n, VEC<Cell>(n));
+    REP(i, 0, robots.size()) {
+      auto t = robots.robots[i];
+      board[t.pos.y][t.pos.x].addRobot(i);
+    }
+    REP(i, 0, blocks.size()) {
+      auto t = blocks.blocks[i];
+      board[t.pos.y][t.pos.x].block = &t;
+    }
+    REP(i, 0, guides.size()) {
+      auto t = guides.guides[i];
+      board[t.pos.y][t.pos.x].guide = &t;
+    }
+  }
+  size_t size() { return board.size(); }
+  Cell &get(const Position &p) { return board[p.y][p.x]; }
+  void show() const {
+    REP(y, 0, board.size()) {
+      REP(x, 0, board.size()) { cerr << board[y][x].toChar(); }
+      cerr << endl;
+    }
+    cerr << endl;
+  }
 };
+
+void robot_next_turn(Robot &robot, Board &board, Position const &goal) {
+  if (robot.pos == goal) {
+    return;
+  }
+  Cell &cell = board.get(robot.pos);
+  if (cell.isGuideAvailable()) {
+    auto guide = *cell.guide;
+    robot.dir = guide.dir;
+  }
+  // auto next_pos_raw = nextRobot.getPosition()(nextRobot.dir);
+  auto next_pos_raw = robot.getPosition().nextPosition(robot.dir);
+  auto &next_cell = board.get(next_pos_raw);
+  if (next_cell.isBlockAvailable()) {
+    return;
+  }
+  cell.removeRobot(robot.id);
+  next_cell.addRobot(robot.id);
+  //   cerr << "prev"<<cell.robots << endl;
+  //   cerr << "next"<<next_cell.robots << endl;
+  robot.pos = next_pos_raw;
+}
+
 class Simulator {
  public:
   Robots robots;
@@ -258,9 +293,12 @@ class Simulator {
   LL simulate() {
     int n = board.size();
     REP(i, 0, n * n) { simulate_next(); }
+    return calc_score();
   }
   void simulate_next() {
-    REP(i, 0, robots.size()) { robots.robots[i].next_turn(board, goal); }
+    REP(i, 0, robots.size()) { robot_next_turn(robots.robots[i], board, goal); }
+    board.show();
+    cerr << robots.toString() << endl;
   }
   LL calc_score() {
     int A = board.get(goal).robots.size();
@@ -275,15 +313,27 @@ class Simulator {
   }
   LL calculate_point(int A, int B, int C) { return 1000 * A - 10 * B + C; }
 };
-int N, RobotNum, BlockNum;
-Position Goal;
-Guides G;
-Robots R;
-Blocks B;
 
+VEC<VEC<bool>> used;
+void locate_guide(Board &board, Position pos, Direction dir) {
+  if (used[pos.y][pos.x]) return;
+  auto &cell = board.get(pos);
+  if (cell.isBlockAvailable()) return;
+  cell.addGuide(Guide(pos, dir));
+  locate_guide(board, pos.up(), DirectionDown);
+  locate_guide(board, pos.down(), DirectionUp);
+  locate_guide(board, pos.left(), DirectionRight);
+  locate_guide(board, pos.right(), DirectionLeft);
+}
 
 int main() {
+  int N, RobotNum, BlockNum;
+  Position Goal;
+  Guides G;
+  Robots R;
+  Blocks B;
   cin >> N >> RobotNum >> BlockNum;
+  Position::N = N;
   int gy, gx;
   cin >> gy >> gx;
   Goal = Position(gy, gx);
@@ -304,7 +354,7 @@ int main() {
   Board board = Board(N, R, B, G);
   Simulator sim = Simulator(R, B, G, board, Goal);
   sim.simulate();
-  cerr<<sim.calc_score()<<endl;
+  cerr << "score " << sim.calc_score() << endl;
 
   // Output
   cout << G.toString() << endl;
