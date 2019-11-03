@@ -55,9 +55,9 @@ class Direction {
   static char const RIGHT = 'R';
   char dir;
   Direction() { dir = 0; }
-  Direction(char c) { 
-    dir = c; 
-    cerr<<"Direction constructor: dir="<<dir<<", c="<<c<<endl;
+  Direction(char c) {
+    dir = c;
+    cerr << "Direction constructor: dir=" << dir << ", c=" << c << endl;
   }
 
   string toString() {
@@ -70,12 +70,12 @@ class Direction {
   bool isLeft() const { return dir == LEFT; }
   bool isRight() const { return dir == RIGHT; }
   string toString() const {
-    cerr << "Direction, toString, dir "<<dir << endl;
+    cerr << "Direction, toString, dir " << dir << endl;
     cerr << "string(1, dir)" << string(1, dir) << endl;
     return string(1, dir);
   }
   char toChar() const {
-    cerr << "Direction, toChar, dir "<<dir << endl;
+    cerr << "Direction, toChar, dir " << dir << endl;
     return (dir);
   }
 };
@@ -136,7 +136,7 @@ class Guide {
   Guide() {}
   Guide(Position pos, Direction d) {
     this->pos = pos;
-    this->dir = dir;
+    this->dir = d;
   }
   Guide(int y, int x, char c) {
     auto g = Guide(Position(y, x), Direction(c));
@@ -221,6 +221,7 @@ class Cell {
     robotArrived = true;
   }
   void addGuide(Guide g) {
+    cerr << hex << &(g.dir.dir) << endl;
     cerr << "Add Guide " << g.toString() << endl;
     guide = new Guide(g.pos, g.dir);
     cerr << "Add Guide " << guide->toString() << endl;
