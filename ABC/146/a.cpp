@@ -3,39 +3,41 @@
 #define REPC(i, a, n) for (long long i = (a); i <= (long long)(n); ++i)
 #define ALL(t) t.begin(), t.end()
 #define RALL(t) t.rbegin(), t.rend()
-#define MATINIT(type, row, col, init)                                          \
+#define MATINIT(type, row, col, init) \
   vector<vector<type>>(row, vector<type>(col, init));
 #define Yes(cond) cout << (cond ? "Yes" : "No") << endl;
 #define YES(cond) cout << (cond ? "YES" : "NO") << endl;
 using namespace std;
 using LL = long long;
 using ULL = unsigned long long;
-template <class T> using VEC = std::vector<T>;
-template <class T> using MAT = std::vector<std::vector<T>>;
+template <class T>
+using VEC = std::vector<T>;
+template <class T>
+using MAT = std::vector<std::vector<T>>;
 void DUMP() { cerr << endl; }
-template <class Head, class... Tail> void DUMP(Head &&head, Tail &&... tail) {
+template <class Head, class... Tail>
+void DUMP(Head &&head, Tail &&... tail) {
   cerr << head << ", ";
   DUMP(std::move(tail)...);
 }
-template <typename T> ostream &operator<<(ostream &os, vector<T> &vec) {
+template <typename T>
+ostream &operator<<(ostream &os, vector<T> &vec) {
   os << "{";
-  for (auto v : vec)
-    os << v << ",";
+  for (auto v : vec) os << v << ",";
   os << "}";
   return os;
 }
-template <typename T> ostream &operator<<(ostream &os, set<T> &s) {
+template <typename T>
+ostream &operator<<(ostream &os, set<T> &s) {
   os << "{";
-  for (auto p : s)
-    os << p << ",";
+  for (auto p : s) os << p << ",";
   os << "}";
   return os;
 }
 template <typename T1, typename T2>
 ostream &operator<<(ostream &os, map<T1, T2> &m) {
   os << "{";
-  for (auto p : m)
-    os << p << ",";
+  for (auto p : m) os << p << ",";
   os << "}";
   return os;
 }
@@ -46,17 +48,27 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  string S;cin>>S;
-  map<string, int>m = {
-    {"SUN", 7},
-    {"MON", 6},
-    {"TUE", 5},
-    {"WED", 4},
-    {"THU", 3},
-    {"FRI", 2},
-    {"SAT", 1},
+  string S;
+  cin >> S;
+  map<string, int> m = {
+      {"SUN", 7}, {"MON", 6}, {"TUE", 5}, {"WED", 4},
+      {"THU", 3}, {"FRI", 2}, {"SAT", 1},
   };
-  cout<<m[S]<<endl;
+  cout << m[S] << endl;
+
+  return 0;
+}
+
+int bekkai() {
+  string S;
+  cin >> S;
+  VEC<string> m = {"SAT", "FRI", "THU", "WED", "TUE", "MON", "SUN"};
+  REP(i, 0, m.size()) {
+    if (m[i] == S) {
+      cout << i + 1 << endl;
+      break;
+    }
+  }
 
   return 0;
 }
