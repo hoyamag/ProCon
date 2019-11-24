@@ -46,23 +46,9 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 }
 
 int main() {
-  LL M;
-  cin>>M;
-  LL cnt_carry = 0;
-  ULL carry=0;
-  ULL sum_c = 0;
-  ULL s= 0;
-  REP(i,0,M){
-    ULL d,c;
-    cin>>d>>c;
-    sum_c+=c;
-    s+=d*c;
-
-    ULL sum = d*c+carry;
-    cnt_carry+=sum/9;
-    carry=sum%10;
-  }
-  cout<<sum_c -1 + (s-1)/9<<endl;
+  int A,B;
+  cin>>A>>B;
+  cout<<A*B*B<<endl;
 
   return 0;
 }
