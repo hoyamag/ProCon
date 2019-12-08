@@ -46,7 +46,7 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-const LL M = 1e9 + 7;
+const LL M = 1000000007;
 void show(VEC<VEC<int>> A) {
   REP(i, 0, A.size()) {
     REP(j, 0, A[i].size()) { cerr << A[i][j] << " "; }
@@ -56,7 +56,7 @@ void show(VEC<VEC<int>> A) {
 }
 LL gbit(LL n, LL i) { return (n >> i) & 1; }
 
-int main() {
+int in_contest() {
   LL N;
   cin >> N;
   VEC<LL> A(N);
@@ -92,5 +92,34 @@ int main() {
   }
   cout << sum << endl;
 
+  return 0;
+}
+int main() {
+  ULL N;
+  cin >> N;
+  VEC<ULL> A(N);
+  REP(i, 0, N) cin >> A[i];
+  ULL bit_lim = 60;
+  VEC<ULL> B(bit_lim, 0);
+  REP(bit, 0, bit_lim) {
+    LL zeros = 0;
+    LL ones = 0;
+    REP(i, 0, N) {
+      if (gbit(A[i], bit)) {
+        ones++;
+      } else {
+        zeros++;
+      }
+    }
+    // zeros=(N-ones);
+    B[bit] = (zeros * ones) % M;
+  }
+  ULL sum = 0;
+  REP(bit, 0, bit_lim) {
+    ULL c = (1ULL << bit) % M;
+    c = (B[bit] * c) % M;
+    sum = (sum + c) % M;
+  }
+  cout << sum << endl;
   return 0;
 }
