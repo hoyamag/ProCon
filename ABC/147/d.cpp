@@ -56,7 +56,8 @@ void show(VEC<VEC<int>> A) {
 }
 LL gbit(LL n, LL i) { return (n >> i) & 1; }
 
-int in_contest() {
+int main() {//AC
+  // The way come up with during contest
   LL N;
   cin >> N;
   VEC<LL> A(N);
@@ -79,7 +80,7 @@ int in_contest() {
       } else {
         one_num = N - i - 1 - one_num_raw;
       }
-      B[bit] += one_num;
+      B[bit] = (B[bit]+one_num)%M;
     }
   }
   LL sum = 0;
@@ -87,14 +88,14 @@ int in_contest() {
     // LL c = 0;
     // LL adding = (1LL << bit);
     // REP(i, 0, B[bit]) { c = (c + adding) % M; }
-    LL c = (B[bit] * (1LL << bit)) % M;
+    LL c = (B[bit] * ((1LL << bit)%M)) % M;
     sum = (sum + c) % M;
   }
   cout << sum << endl;
 
   return 0;
 }
-int main() {
+int from_editorial() {//AC
   ULL N;
   cin >> N;
   VEC<ULL> A(N);
