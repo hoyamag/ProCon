@@ -50,16 +50,27 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 int main() {
   LL A, B, X;
   cin >> A >> B >> X;
-  LL ans = 0;
-  LL lim = 1e9;
-  REP(keta, 1, 11) {
-    LL ko = (X - B - keta);
-    LL num = ko / A;
-    DUMP(num);
-    num = min({(LL)pow(10, keta) - 1, num, X});
-    ans = max(ans, num);
+  int left = 0;
+  int right = 1e9 + 1;
+  auto f = [&](LL N) -> LL {
+    int keta = 0;
+    LL M = N;
+    while (M > 0) {
+      M /= 10;
+      keta++;
+    }
+    return A * N + B * keta;
+  };
+  while (right - left > 1) {
+    LL mid = (left + right) / 2;
+    // DUMP(left, right, f(mid));
+    if (f(mid) <= X) {
+      left = mid;
+    } else {
+      right = mid;
+    }
   }
-  cout << ans << endl;
+  cout << left << endl;
 
   return 0;
 }

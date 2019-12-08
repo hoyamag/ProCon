@@ -49,39 +49,6 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 
 int main() {
   int N;
-  cin >> N;
-  VEC<pair<int, int>> G(N);
-  VEC<int> jisu(N, 0);
-  int color_num = 0;
-  REP(i, 0, N - 1) {
-    cin >> G[i].first >> G[i].second;
-    G[i].first--;
-    G[i].second--;
-    if (G[i].first > G[i].second) swap(G[i].first, G[i].second);
-    jisu[G[i].first]++;
-    jisu[G[i].second]++;
-    color_num = max({color_num, jisu[G[i].first], jisu[G[i].second]});
-  }
-  cerr << endl;
-  VEC<set<int>> available(N);
-  REP(i, 0, N) {
-    REP(j, 0, color_num) { available[i].insert(j + 1); }
-  }
-
-  cout << color_num << endl;
-  REP(i, 0, N - 1) {
-    int p = G[i].first;
-    int q = G[i].second;
-    // DUMP(available[p], available[q]);
-    REP(c, 0, color_num) {
-      if (available[p].count(c + 1) > 0 && available[q].count(c + 1) > 0) {
-        cout << c + 1 << endl;
-        available[p].erase(c + 1);
-        available[q].erase(c + 1);
-        break;
-      }
-    }
-  }
 
   return 0;
 }

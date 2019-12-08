@@ -49,26 +49,12 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 
 int main() {
   string S;
-  cin >> S;
-  map<string, int> m = {
-      {"SUN", 7}, {"MON", 6}, {"TUE", 5}, {"WED", 4},
-      {"THU", 3}, {"FRI", 2}, {"SAT", 1},
-  };
-  cout << m[S] << endl;
-
-  return 0;
-}
-
-int bekkai() {
-  string S;
-  cin >> S;
-  VEC<string> m = {"SAT", "FRI", "THU", "WED", "TUE", "MON", "SUN"};
-  REP(i, 0, m.size()) {
-    if (m[i] == S) {
-      cout << i + 1 << endl;
+  cin>>S;
+  VEC<string>a={"SAT", "FRI", "THU", "WED", "TUE", "MON", "SUN"};
+  REP(i,0,a.size()){
+    if(a[i]==S){
+      cout<<i+1<<endl;
       break;
     }
   }
-
-  return 0;
 }

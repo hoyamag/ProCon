@@ -51,10 +51,8 @@ int main() {
   int N;
   string S;
   cin >> N >> S;
-  REP(i,0,S.length()){
-    S[i]= 'A'+(S[i]-'A'+N)%26;
-  }
-  cout<<S<<endl;
+  REP(i, 0, S.length()) { S[i] = (S[i] - 'A' + N) % 26 + 'A'; }
+  cout << S << endl;
 
   return 0;
 }
