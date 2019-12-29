@@ -48,9 +48,7 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
 int main() {
   string S, T;
   cin>>S>>T;
-  stringstream os;
-  os<<T<<S;
-  cout<<os.str()<<endl;
+  cout<<T+S<<endl;
 
   return 0;
 }
