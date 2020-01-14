@@ -51,3 +51,7 @@ struct ModInt {
     return res /= a;
   }
 };
+std::ostream& operator<<(std::ostream& os, const ModInt& a) {
+  os << a.x;
+  return os;
+}
