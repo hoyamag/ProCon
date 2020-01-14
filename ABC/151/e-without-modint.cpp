@@ -47,62 +47,6 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   return os;
 }
 
-// ABC129 https://youtu.be/L8grWxBlIZ4?t=9860
-struct ModInt {
-  static const int MOD = 1000000007;
-  long long x;
-  ModInt(long long x = 0) : x((x % MOD + MOD) % MOD) {}
-  ModInt &operator+=(const ModInt a) {
-    if ((x += a.x) >= MOD) x -= MOD;
-    return *this;
-  }
-  ModInt &operator-=(const ModInt a) {
-    if ((x += MOD - a.x) >= MOD) x -= MOD;
-    return *this;
-  }
-  ModInt &operator*=(const ModInt a) {
-    (x *= a.x) %= MOD;
-    return *this;
-  }
-  ModInt operator+(const ModInt a) const {
-    ModInt res(*this);
-    return res += a;
-  }
-  ModInt operator-(const ModInt a) const {
-    ModInt res(*this);
-    return res -= a;
-  }
-  ModInt operator*(const ModInt a) const {
-    ModInt res(*this);
-    return res *= a;
-  }
-  ModInt pow(long long t) const {
-    if (!t) return 1;
-    ModInt a = pow(t >> 1);
-    a *= a;
-    if (t & 1) a *= *this;
-    return a;
-  }
-  // for prime MOD
-  ModInt inv() const {
-    // オイラーの定理より
-    // https://ja.wikipedia.org/wiki/%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%A9%E9%80%86%E6%95%B0
-    return pow(MOD - 2);
-  }
-  // for prime MOD
-  ModInt &operator/=(const ModInt a) { return (*this) *= a.inv(); }
-
-  // for prime MOD
-  ModInt operator/(const ModInt a) const {
-    ModInt res(*this);
-    return res /= a;
-  }
-};
-std::ostream &operator<<(std::ostream &os, const ModInt &a) {
-  os << a.x;
-  return os;
-}
-
 // http://drken1215.hatenablog.com/entry/2018/06/08/210000
 const int MAX = 510000;
 const int MOD = 1000000007;
@@ -128,14 +72,14 @@ long long COM(int n, int k) {
   return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
 }
 
-ModInt Sub1(LL N, LL K, VEC<LL> &A) {
+LL Sub1(LL N, LL K, VEC<LL> &A) {
   // return comb(N, K)*E(minX) mod 1e9+7
   //   or   comb(N, K)*E(maxX) mod 1e9+7
 
-  // DUMP("Sub1", N, K, A)a;
-  ModInt sum(0);
+  // DUMP("Sub1", N, K, A);
+  LL sum = 0;
   REP(i, 1, N - K + 1 + 1) {
-    sum += COM(N - i, K - 1) * A[i - 1];
+    sum = (sum + (COM(N - i, K - 1) * (MOD+A[i - 1])%MOD) % MOD) % MOD;
     // DUMP("i, sum, COM(N-i,K-1), A[i-1]", i, sum, COM(N - i, K - 1), A[i -
     // 1]);
   }
@@ -148,13 +92,13 @@ int main() {
   REP(i, 0, N) cin >> A[i];
   sort(ALL(A));
   COMinit();
-  auto mi = Sub1(N, K, A);
+  LL mi = Sub1(N, K, A);
   reverse(ALL(A));
-  auto ma = Sub1(N, K, A);
+  LL ma = Sub1(N, K, A);
   // DUMP(ma, mi);
   // DUMP("COM(N,K)", COM(N, K));
   // DUMP("E(minX)", (double)mi / COM(N, K), "E(maxX)", (double)ma / COM(N, K));
-  cout << ma - mi << endl;
+  cout << (MOD - mi + ma) % MOD << endl;
 
   return 0;
 }
