@@ -46,82 +46,34 @@ ostream &operator<<(ostream &os, pair<T1, T2> p) {
   os << "[" << p.first << " " << p.second << "]";
   return os;
 }
-int N;
-int diff(string a, string b) {
-  if (a.length() != b.length()) {
-    return 3;
+int top(int n) {
+  int k = 0;
+  while (n) {
+    k = n % 10;
+    n /= 10;
   }
-  int A = stoi(a);
-  int B = stoi(b);
-  return abs(A - B);
+  return k;
 }
-
-LL Max(int head, int tail) {
-  DUMP("Max", head, tail);
-  if (head == 0 || tail == 0) return 0;
-
-  LL count = 0;
-  if (head == tail) count++;
-
-  if (10 * head + tail <= N) {
-    count++;
-  }
-  string strN = to_string(N);
-  if (100 * head + tail <= N) {
-    REP(keta, 1, 8) {
-      string lb = string(keta, '0');
-      string ub = string(keta, '9');
-      // DUMP("lb ub", lb, ub);
-      while (diff(lb, ub) > 1) {
-        int mid = (stoi(lb) + stoi(ub)) / 2;
-        string smid = to_string(mid);
-        // DUMP("lb,ub,mid, smid", lb, ub, mid, smid);
-        smid = string(keta - smid.length(), '0') + smid;
-        if (smid <= strN) {
-          lb = smid;
-        } else {
-          ub = smid;
-        }
-      }
-      count += stoi(lb) + 1;
-      DUMP("keta, count, lb", keta, count, lb);
-    }
-    // int ok = 0;
-    // int ng = N;
-    // while (abs(ok - ng) > 1) {
-    //   int mid = (ok + ng) / 2;
-    //   string f = to_string(head) + to_string(mid) + to_string(tail);
-    //   DUMP(head, tail, f);
-    //   // DUMP(to_string(head) + to_string(mid) + to_string(tail));
-    //   // DUMP(f);
-    //   if (f <= strN) {
-    //     ok = mid;
-    //   } else {
-    //     ng = mid;
-    //   }
-    // }
-    // DUMP("    ", ok, ng);
-    // count += ok;
-  }
-  // DUMP("  in Max", count);
-  return count;
-}
-
 int main() {
+  int N;
   cin >> N;
   LL cnt = 0;
   VEC<VEC<int>> P(10, VEC<int>(10, 0));
-  REP(h, 0, 10) {
-    REP(t, 0, 10) { P[h][t] = Max(h, t); }
-  }
-  REP(a, 1, N + 1) {
-    string sa = to_string(a);
-    int h = sa[0] - '0';
-    int t = sa[sa.length() - 1] - '0';
-    swap(h, t);
-    // DUMP(a, h, t, cnt);
 
-    cnt += P[h][t];
+  REP(i, 1, N + 1) {
+    int h = top(i);
+    int t = i % 10;
+    // DUMP(i, h, t);
+    if (t == 0) continue;
+    P[h][t]++;
+  }
+  REP(i, 0, 10) { DUMP(i, P[i]); }
+
+  REP(h, 1, 10) {
+    REP(t, 1, 10) {
+      // DUMP(a, h, t, cnt);
+      cnt += P[h][t] * P[t][h];
+    }
   }
   cout << cnt << endl;
 
