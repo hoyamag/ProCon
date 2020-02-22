@@ -127,7 +127,7 @@ int main() {
     // cerr << "." << endl;
     // cerr << M << " " << i << " ANS:" << ANS << endl;
     int num = M[i] - '0';
-    if (6 <= num && num <= 9) {
+    if (6 <= num && num <= 9 ) {
       // ANS -= (num - 6) * 2 + 1;
       Alpha[i] += 10 - num;
       // DUMP(M, i);
