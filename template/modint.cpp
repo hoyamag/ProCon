@@ -29,6 +29,12 @@ struct ModInt {
     ModInt res(*this);
     return res *= a;
   }
+  bool operator==(const ModInt a) const {
+    return this->x == a.x && this->MOD == a.MOD;
+  }
+  bool operator!=(const ModInt a) const {
+    return this->x != a.x || this->MOD != a.MOD;
+  }
   ModInt pow(long long t) const {
     if (!t) return 1;
     ModInt a = pow(t >> 1);
@@ -55,3 +61,11 @@ std::ostream& operator<<(std::ostream& os, const ModInt& a) {
   os << a.x;
   return os;
 }
+ModInt Combination(long long n, long long k) {
+  // simple algorithm
+  ModInt res = 1;
+  for (long long i = 1; i < k + 1; i++) {
+    ModInt a = n - i + 1;
+    res *= a / i;
+  }
+  return res;
